@@ -1,4 +1,4 @@
-# SOLID Review
+# SOLID 원칙 검토
 
 현재 코드에 SOLID 원칙을 검토하고 적용합니다.
 
