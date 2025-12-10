@@ -165,38 +165,37 @@ Use numeric prefixes on folder names for hierarchical organization. (Do NOT add 
 ### Rules
 - **Format**: `XX_FolderName/` (2-digit number + underscore + folder name)
 - **Depth**: No limit (nest as deep as needed)
-- **Range**: 00~05 per level (6 folders max per level)
+- **Range**: 01~05 per level (5 folders max per level)
 
-### Top-Level Categories (00~05)
+### Top-Level Categories (01~05)
 | Number | Purpose |
 |--------|---------|
-| 00 | Core/Foundation |
-| 01 | Data/Models |
-| 02 | Systems/Services |
-| 03 | Gameplay/Features |
-| 04 | UI/Presentation |
-| 05 | Utilities/Helpers |
+| 01 | Core/Foundation |
+| 02 | Data/Models |
+| 03 | Systems/Services |
+| 04 | Gameplay/Features |
+| 05 | UI/Utilities |
 
 ### Example Structure
 ```
 Scripts/
-├── 00_Core/
-│   ├── 00_Managers/
+├── 01_Core/
+│   ├── 01_Managers/
 │   │   ├── GameManager.cs
 │   │   └── SceneManager.cs
-│   ├── 01_States/
+│   ├── 02_States/
 │   │   └── GameStateController.cs
-│   └── 02_Events/
+│   └── 03_Events/
 │       └── EventBus.cs
-├── 01_Data/
-│   ├── 00_Player/
+├── 02_Data/
+│   ├── 01_Player/
 │   │   └── PlayerData.cs
-│   └── 01_Items/
+│   └── 02_Items/
 │       └── ItemData.cs
-└── 02_Systems/
-    ├── 00_Save/
+└── 03_Systems/
+    ├── 01_Save/
     │   └── SaveSystem.cs
-    └── 01_Audio/
+    └── 02_Audio/
         └── AudioSystem.cs
 ```
 
