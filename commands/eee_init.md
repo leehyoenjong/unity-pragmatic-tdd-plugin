@@ -1,0 +1,2 @@
+# PROJECT_CONTEXT 생성 및 첫 셋팅
+1. Create a ".clauiderules" file."Read and follow all instructions.- Always check if a PROJECT_CONTEXT.md file exists. If it doesn't exist, ask the user about the project stage and create it."
