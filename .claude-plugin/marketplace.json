@@ -1,0 +1,16 @@
+{
+  "name": "leehyoenjong-plugins",
+  "description": "leehyoenjong's Claude Code plugins",
+  "plugins": [
+    {
+      "id": "unity-pragmatic-tdd",
+      "name": "Unity Pragmatic TDD",
+      "description": "Unity 게임 개발을 위한 실용적 TDD 및 SOLID 가이드",
+      "version": "1.0.0",
+      "source": {
+        "type": "github",
+        "repo": "leehyoenjong/unity-pragmatic-tdd-plugin"
+      }
+    }
+  ]
+}
