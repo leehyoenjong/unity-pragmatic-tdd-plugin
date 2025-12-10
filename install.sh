@@ -22,9 +22,10 @@ fi
 mkdir -p .claude
 
 # 기존 링크/폴더 제거 후 생성
-rm -rf .claude/skills .claude/docs 2>/dev/null || true
+rm -rf .claude/skills .claude/docs .claude/commands 2>/dev/null || true
 ln -s ../$PLUGIN_DIR/skills .claude/skills
 ln -s ../$PLUGIN_DIR/docs .claude/docs
+ln -s ../$PLUGIN_DIR/commands .claude/commands
 
 # CLAUDE.md 복사
 cp "$PLUGIN_DIR/CLAUDE.md" ./CLAUDE.md
@@ -35,5 +36,13 @@ echo "📁 구조:"
 echo "   CLAUDE.md"
 echo "   .claude/skills -> .claude-plugin/skills"
 echo "   .claude/docs -> .claude-plugin/docs"
+echo "   .claude/commands -> .claude-plugin/commands"
+echo ""
+echo "📌 사용 가능한 슬래시 명령어:"
+echo "   /tdd           - TDD 워크플로우 적용"
+echo "   /solid         - SOLID 원칙 검토"
+echo "   /safety-check  - Beta 단계 기능 안전성 체크"
+echo "   /transition    - 프로젝트 단계 전환"
+echo "   /review        - 코드 리뷰 (안티패턴 체크)"
 echo ""
 echo "🔄 업데이트: cd .claude-plugin && git pull"
