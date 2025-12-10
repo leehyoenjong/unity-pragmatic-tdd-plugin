@@ -223,6 +223,8 @@ Is that correct? (y/n)
 - Beta: Don't break it (extend only)
 - Live: Protect it (minimal changes)
 
+- All Language Korea plz
+
 ---
 
 ## Version
