@@ -158,6 +158,55 @@ Scripts/
 
 ---
 
+## Folder Naming Convention
+
+Use numeric prefixes on folder names for hierarchical organization. (Do NOT add numbers to file names)
+
+### Rules
+- **Format**: `XX_FolderName/` (2-digit number + underscore + folder name)
+- **Depth**: No limit (nest as deep as needed)
+- **Range**: 00~05 per level (6 folders max per level)
+
+### Top-Level Categories (00~05)
+| Number | Purpose |
+|--------|---------|
+| 00 | Core/Foundation |
+| 01 | Data/Models |
+| 02 | Systems/Services |
+| 03 | Gameplay/Features |
+| 04 | UI/Presentation |
+| 05 | Utilities/Helpers |
+
+### Example Structure
+```
+Scripts/
+├── 00_Core/
+│   ├── 00_Managers/
+│   │   ├── GameManager.cs
+│   │   └── SceneManager.cs
+│   ├── 01_States/
+│   │   └── GameStateController.cs
+│   └── 02_Events/
+│       └── EventBus.cs
+├── 01_Data/
+│   ├── 00_Player/
+│   │   └── PlayerData.cs
+│   └── 01_Items/
+│       └── ItemData.cs
+└── 02_Systems/
+    ├── 00_Save/
+    │   └── SaveSystem.cs
+    └── 01_Audio/
+        └── AudioSystem.cs
+```
+
+### Benefits
+- Auto-sorted in file explorer
+- Clear dependency direction (lower number → higher number)
+- Quick overview of code structure
+
+---
+
 ## Special Instructions for Claude Code
 
 1. **Always check PROJECT_CONTEXT.md first** before starting any work
@@ -228,6 +277,6 @@ Is that correct? (y/n)
 ---
 
 ## Version
-- Document Version: 3.0
-- Last Updated: 2025-12-06
+- Document Version: 3.1
+- Last Updated: 2025-12-10
 - Note: Detailed guides moved to `.claude/skills/` and `.claude/docs/`
