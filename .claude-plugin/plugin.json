@@ -1,0 +1,10 @@
+{
+  "name": "unity-pragmatic-tdd",
+  "version": "1.0.0",
+  "description": "Unity 게임 개발을 위한 실용적 TDD 및 SOLID 가이드. 프로젝트 단계별(Prototype/Alpha/Beta/Live) 맞춤 개발 방법론 제공.",
+  "author": "ihyeonjong",
+  "keywords": ["unity", "tdd", "solid", "gamedev", "testing", "csharp"],
+  "homepage": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
+  "repository": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
+  "license": "MIT"
+}
