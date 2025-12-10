@@ -11,8 +11,16 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 ## 설치
 
 ```bash
-# Unity 프로젝트 루트에서 실행
-curl -fsSL https://raw.githubusercontent.com/leehyoenjong/unity-pragmatic-tdd-plugin/main/install.sh | bash
+# 프로젝트 루트에서 실행
+git submodule add
+https://github.com/leehyoenjong/unity-pragmatic-tdd-plugin.git
+.claude-plugin
+
+# 이후 클론 시
+git clone --recurse-submodules <your-repo>
+
+# 기존 클론에서 서브모듈 초기화
+git submodule update --init --recursive
 ```
 
 ## 슬래시 명령어
