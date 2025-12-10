@@ -21,11 +21,11 @@ curl -fsSL https://raw.githubusercontent.com/leehyoenjong/unity-pragmatic-tdd-pl
 
 | 명령어 | 설명 |
 |--------|------|
-| `/tdd` | TDD 워크플로우 적용 |
-| `/solid` | SOLID 원칙 검토 |
-| `/safety-check` | Beta 단계 기능 안전성 체크 |
-| `/transition` | 프로젝트 단계 전환 |
-| `/review` | 코드 리뷰 (안티패턴 체크) |
+| `/utdd_tdd` | TDD 워크플로우 적용 |
+| `/utdd_solid` | SOLID 원칙 검토 |
+| `/utdd_safety-check` | Beta 단계 기능 안전성 체크 |
+| `/utdd_transition` | 프로젝트 단계 전환 |
+| `/utdd_review` | 코드 리뷰 (안티패턴 체크) |
 
 ## 포함 내용
 
