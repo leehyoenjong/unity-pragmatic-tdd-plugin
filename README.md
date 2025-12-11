@@ -12,7 +12,10 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 
 ```bash
 # 프로젝트 루트에서 실행
-git clone --depth 1 https://github.com/leehyoenjong/unity-pragmatic-tdd-plugin.git .claude-plugin && rm -rf .claude-plugin/.git && bash .claude-plugin/install.sh
+cd /tmp && rm -rf unity-pragmatic-tdd-plugin 2>/dev/null && git clone --depth 1
+  git@github.com:leehyoenjong/unity-pragmatic-tdd-plugin.git && rm -rf
+  unity-pragmatic-tdd-plugin/.git && cd - && rm -rf .claude-plugin 2>/dev/null && mv
+   /tmp/unity-pragmatic-tdd-plugin .claude-plugin && bash .claude-plugin/install.sh
 ```
 
 ## 슬래시 명령어
