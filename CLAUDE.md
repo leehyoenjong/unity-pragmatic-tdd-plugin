@@ -245,6 +245,25 @@ Assets/
 
 ---
 
+## 작업 프로세스
+
+Unity 프로젝트 작업 시 Claude와 사용자 간의 역할 분담:
+
+| Step | 담당 | 내용 |
+|------|------|------|
+| 1. 제작 | Claude | 코드 작성 |
+| 2. 컴파일 체크 | Claude | 에러 확인/수정 |
+| 3. TDD 체크 | Claude | 테스트 실행 (에디터 종료 요청) |
+| 4. 씬 구성 | Claude | YAML 직접 수정 |
+| 5. PlayMode | 사용자 | Play 버튼으로 테스트 |
+
+### 주의사항
+- **Step 3**: Unity 에디터가 열려 있으면 테스트 실행이 불가능합니다. 테스트 전 에디터 종료를 요청합니다.
+- **Step 4**: 씬 파일(.unity)은 YAML 포맷으로 직접 수정 가능합니다.
+- **Step 5**: PlayMode 테스트는 사용자가 직접 Unity 에디터에서 실행합니다.
+
+---
+
 ## Special Instructions for Claude Code
 
 1. **Always check PROJECT_CONTEXT.md first** before starting any work
@@ -315,6 +334,6 @@ Is that correct? (y/n)
 ---
 
 ## Version
-- Document Version: 3.1
-- Last Updated: 2025-12-10
+- Document Version: 3.2
+- Last Updated: 2025-12-28
 - Note: Detailed guides moved to `.claude/skills/` and `.claude/docs/`
