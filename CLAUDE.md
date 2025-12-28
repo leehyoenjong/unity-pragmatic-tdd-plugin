@@ -166,8 +166,27 @@ Use numeric prefixes on folder names for hierarchical organization. (Do NOT add 
 - **Format**: `XX_FolderName/` (2-digit number + underscore + folder name)
 - **Depth**: No limit (nest as deep as needed)
 - **Range**: 01~05 per level (5 folders max per level)
+- **Scope**: Apply to ALL folders in the Unity project (Assets 하위 모든 폴더)
 
-### Top-Level Categories (01~05)
+### Unity Project Root Categories (Assets/)
+| Number | Folder | Purpose |
+|--------|--------|---------|
+| 01 | 01_Scripts | 코드 파일 |
+| 02 | 02_Scenes | 씬 파일 |
+| 03 | 03_Resources | 런타임 로드 리소스 |
+| 04 | 04_Prefabs | 프리팹 |
+| 05 | 05_Art | 아트 에셋 (Sprites, Models, Animations) |
+
+### Additional Root Folders (필요시 확장)
+| Number | Folder | Purpose |
+|--------|--------|---------|
+| 06 | 06_Audio | 사운드, 음악 |
+| 07 | 07_UI | UI 에셋 |
+| 08 | 08_Materials | 머티리얼, 셰이더 |
+| 09 | 09_Plugins | 서드파티 플러그인 |
+| 10 | 10_Editor | 에디터 전용 스크립트 |
+
+### Scripts 내부 Categories (01_Scripts/)
 | Number | Purpose |
 |--------|---------|
 | 01 | Core/Foundation |
@@ -178,31 +197,51 @@ Use numeric prefixes on folder names for hierarchical organization. (Do NOT add 
 
 ### Example Structure
 ```
-Scripts/
-├── 01_Core/
-│   ├── 01_Managers/
-│   │   ├── GameManager.cs
-│   │   └── SceneManager.cs
-│   ├── 02_States/
-│   │   └── GameStateController.cs
-│   └── 03_Events/
-│       └── EventBus.cs
-├── 02_Data/
+Assets/
+├── 01_Scripts/
+│   ├── 01_Core/
+│   │   ├── 01_Managers/
+│   │   │   ├── GameManager.cs
+│   │   │   └── SceneManager.cs
+│   │   ├── 02_States/
+│   │   │   └── GameStateController.cs
+│   │   └── 03_Events/
+│   │       └── EventBus.cs
+│   ├── 02_Data/
+│   │   ├── 01_Player/
+│   │   │   └── PlayerData.cs
+│   │   └── 02_Items/
+│   │       └── ItemData.cs
+│   └── 03_Systems/
+│       ├── 01_Save/
+│       │   └── SaveSystem.cs
+│       └── 02_Audio/
+│           └── AudioSystem.cs
+├── 02_Scenes/
+│   ├── 01_Main/
+│   ├── 02_Game/
+│   └── 03_UI/
+├── 03_Resources/
+│   ├── 01_Data/
+│   └── 02_Prefabs/
+├── 04_Prefabs/
 │   ├── 01_Player/
-│   │   └── PlayerData.cs
-│   └── 02_Items/
-│       └── ItemData.cs
-└── 03_Systems/
-    ├── 01_Save/
-    │   └── SaveSystem.cs
-    └── 02_Audio/
-        └── AudioSystem.cs
+│   ├── 02_Enemy/
+│   └── 03_UI/
+├── 05_Art/
+│   ├── 01_Sprites/
+│   ├── 02_Models/
+│   └── 03_Animations/
+└── 06_Audio/
+    ├── 01_BGM/
+    └── 02_SFX/
 ```
 
 ### Benefits
 - Auto-sorted in file explorer
 - Clear dependency direction (lower number → higher number)
 - Quick overview of code structure
+- 프로젝트 전체에서 일관된 구조 유지
 
 ---
 
