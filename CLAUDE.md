@@ -277,6 +277,50 @@ Unity 프로젝트 작업 시 Claude와 사용자 간의 역할 분담:
 
 ---
 
+## Subagents & Pipelines
+
+### 서브에이전트 (자동 호출)
+Located in `.claude/agents/`:
+
+| 에이전트 | 역할 | 모델 |
+|---------|-----|-----|
+| `architect` | 시스템 설계, 인터페이스, OCP 확장점 | sonnet |
+| `implementer` | Pure C# 구현, TDD 테스트 작성 | sonnet |
+| `reviewer` | SOLID 검토, 안전성 평가 | haiku |
+
+### 스크립트 (컨텍스트 절약)
+Located in `.claude/scripts/`:
+
+| 스크립트 | 용도 |
+|---------|-----|
+| `create-structure.sh` | 폴더/빈 파일 생성 (XX_ 규칙 적용) |
+
+### 파이프라인
+Located in `.claude/pipelines/`:
+
+| 파이프라인 | 용도 |
+|----------|-----|
+| `new-system.md` | 새 시스템 생성 전체 흐름 |
+
+### 사용 예시
+```
+"인벤토리 시스템 만들어줘"
+→ .claude/pipelines/new-system.md 참고해서 처리
+
+자동 실행:
+1. create-structure.sh → 폴더/파일 생성 (컨텍스트 0)
+2. architect → 인터페이스 설계 (독립 컨텍스트)
+3. implementer → 구현 + 테스트 (독립 컨텍스트)
+4. reviewer → SOLID 검토 (독립 컨텍스트)
+```
+
+### 설계 원칙
+- **스크립트**: 판단 불필요한 반복 작업 → 컨텍스트 절약
+- **서브에이전트**: 판단 필요, 독립 실행 → 메인 컨텍스트 보호
+- **메인 LLM**: 조율, 최종 판단
+
+---
+
 ## Available Skills and Docs
 
 ### Skills (invoke when needed)
@@ -334,6 +378,6 @@ Is that correct? (y/n)
 ---
 
 ## Version
-- Document Version: 3.2
-- Last Updated: 2025-12-28
-- Note: Detailed guides moved to `.claude/skills/` and `.claude/docs/`
+- Document Version: 4.0
+- Last Updated: 2026-01-01
+- Note: Added Subagents & Pipelines for context-efficient workflow
