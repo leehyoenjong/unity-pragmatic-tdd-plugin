@@ -319,6 +319,30 @@ Located in `.claude/pipelines/`:
 - **서브에이전트**: 판단 필요, 독립 실행 → 메인 컨텍스트 보호
 - **메인 LLM**: 조율, 최종 판단
 
+### 자동 파이프라인 규칙
+
+다음 패턴의 요청 시 **자동으로 파이프라인 실행**:
+
+| 요청 패턴 | 자동 실행 파이프라인 |
+|----------|-------------------|
+| "XX 시스템 만들어줘" | `.claude/pipelines/new-system.md` |
+| "XX System 구현해줘" | `.claude/pipelines/new-system.md` |
+| "새로운 XX 기능 추가" | `.claude/pipelines/new-system.md` |
+
+**예시:**
+```
+"인벤토리 시스템 만들어줘"
+"Combat System 구현해줘"
+"새로운 Quest 기능 추가해줘"
+```
+→ 모두 자동으로 new-system 파이프라인 실행
+
+**파이프라인 스킵 조건:**
+- 단순 버그 수정
+- 기존 코드 수정
+- 질문/설명 요청
+- 사용자가 "파이프라인 없이" 명시
+
 ---
 
 ## Available Skills and Docs
