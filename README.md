@@ -72,6 +72,8 @@ cd /tmp && rm -rf unity-pragmatic-tdd-plugin 2>/dev/null && git clone --depth 1 
 | `/eee_safety-check` | Beta 단계 기능 안전성 체크 |
 | `/eee_transition` | 프로젝트 단계 전환 |
 | `/eee_review` | 코드 리뷰 (안티패턴 체크) |
+| `/eee_commit` | Git 커밋 (Conventional Commits) |
+| `/eee_push` | Git 푸시 |
 
 ## 폴더 구조
 
