@@ -30,11 +30,24 @@ fi
 mkdir -p .claude
 
 # 기존 링크/폴더 제거 후 생성
-rm -rf .claude/skills .claude/docs .claude/commands .claude/scripts 2>/dev/null || true
+rm -rf .claude/skills .claude/docs .claude/commands .claude/scripts .claude/hooks 2>/dev/null || true
 ln -s ../$PLUGIN_DIR/skills .claude/skills
 ln -s ../$PLUGIN_DIR/docs .claude/docs
 ln -s ../$PLUGIN_DIR/commands .claude/commands
 ln -s ../$PLUGIN_DIR/.claude/scripts .claude/scripts
+ln -s ../$PLUGIN_DIR/.claude/hooks .claude/hooks
+
+# settings.json 병합 (hooks 설정 추가)
+if [ -f ".claude/settings.json" ]; then
+    # 기존 settings.json이 있으면 hooks 설정만 추가
+    if ! grep -q '"hooks"' .claude/settings.json 2>/dev/null; then
+        echo -e "${YELLOW}⚠️  기존 settings.json에 hooks 설정을 수동으로 추가해주세요.${NC}"
+        echo "   참고: $PLUGIN_DIR/.claude/settings.json"
+    fi
+else
+    # settings.json이 없으면 복사
+    cp "$PLUGIN_DIR/.claude/settings.json" .claude/settings.json
+fi
 
 # CLAUDE.md 복사
 cp "$PLUGIN_DIR/CLAUDE.md" ./CLAUDE.md
