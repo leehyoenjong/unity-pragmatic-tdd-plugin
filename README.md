@@ -179,7 +179,54 @@ public class Pet : IStatModifier
 - `.claude/pipelines/new-system.md` - 새 시스템 생성 파이프라인
 - `.claude/scripts/create-structure.sh` - 폴더 구조 생성 스크립트
 
-## 함께 사용하면 좋은 플러그인
+## 함께 사용하면 좋은 도구
+
+### [Unity-MCP](https://github.com/IvanMurzak/Unity-MCP)
+
+Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입니다.
+
+#### 주요 기능
+
+- Unity 에디터 직접 제어 (씬, 에셋, 오브젝트)
+- C# 스크립트 생성 및 실행
+- 자연어로 Unity 작업 요청
+- Editor & Runtime 모두 지원
+
+#### 설치 방법
+
+**1단계: Unity 패키지 설치**
+```
+Unity Package Manager > Add package from git URL:
+https://github.com/IvanMurzak/Unity-MCP.git
+```
+
+**2단계: MCP 서버 빌드**
+```
+Unity 에디터 > Window > AI Game Developer (Unity-MCP) > Build Server
+```
+
+**3단계: Claude Code 연결**
+```bash
+.claude/scripts/setup-unity-mcp.sh
+```
+
+#### 사용 예시
+
+```
+"씬에 큐브 3개를 원형으로 배치해줘"
+"골드 메탈릭 머티리얼 만들어줘"
+"Player 스크립트에 점프 기능 추가해줘"
+```
+
+#### 시너지 효과
+
+| unity-pragmatic-tdd-plugin | + Unity-MCP | 결과 |
+|---------------------------|-------------|------|
+| 인터페이스 설계 (architect) | 코드 생성 | 설계 원칙 준수 코드 자동 생성 |
+| TDD 테스트 작성 | 에디터 제어 | 테스트 → 구현 → 실행 자동화 |
+| SOLID 리뷰 | 리팩토링 적용 | 리뷰 결과 즉시 반영 |
+
+---
 
 ### [claude-mem](https://github.com/thedotmack/claude-mem)
 
