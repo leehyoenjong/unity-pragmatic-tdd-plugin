@@ -40,6 +40,30 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 |---------|-----|
 | `create-structure.sh` | 폴더/빈 파일 생성 (XX_ 규칙 적용) |
 
+### 알림 (Hooks)
+
+Claude Code 작업 완료 시 자동으로 알림을 표시합니다.
+
+```
+[unity-pragmatic-tdd-plugin] 응답 완료
+```
+
+**지원 플랫폼:**
+- macOS: 다이얼로그 + 사운드
+- Windows: MessageBox + 사운드
+- Linux: notify-send + 사운드
+
+**알림 내용:**
+
+| 상태 | 메시지 |
+|------|--------|
+| `end_turn` | 응답 완료 |
+| `max_tokens` | 토큰 한도 도달 |
+| `tool_use` | 도구 사용 완료 |
+| `interrupt` | 사용자 중단 |
+
+> 설정 파일: `.claude/settings.json` (Stop hook)
+
 ## 설치
 
 ```bash
