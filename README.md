@@ -194,21 +194,31 @@ Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입�
 
 #### 설치 방법
 
-**1단계: Unity 패키지 설치**
-```
-Unity Package Manager > Add package from git URL:
-https://github.com/IvanMurzak/Unity-MCP.git
-```
+**자동 설치 (권장)**
 
-**2단계: MCP 서버 빌드**
-```
-Unity 에디터 > Window > AI Game Developer (Unity-MCP) > Build Server
-```
-
-**3단계: Claude Code 연결**
+Unity 프로젝트에서 이 플러그인을 설치하면 자동으로 Unity-MCP 설치를 묻습니다:
 ```bash
-.claude/scripts/setup-unity-mcp.sh
+bash .claude-plugin/install.sh
+# → "Unity-MCP를 manifest.json에 추가하시겠습니까? (y/n)"
+# → y 입력 시 자동 추가
 ```
+
+**수동 설치**
+
+1. Unity Package Manager > Add package from git URL:
+   ```
+   https://github.com/IvanMurzak/Unity-MCP.git
+   ```
+
+2. MCP 서버 빌드:
+   ```
+   Unity 에디터 > Window > AI Game Developer (Unity-MCP) > Build Server
+   ```
+
+3. Claude Code 연결:
+   ```bash
+   .claude/scripts/setup-unity-mcp.sh
+   ```
 
 #### 사용 예시
 
