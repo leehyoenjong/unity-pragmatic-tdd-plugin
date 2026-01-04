@@ -194,35 +194,36 @@ Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입�
 
 #### 설치 방법
 
-**자동 설치 (권장)**
+**Step 1: Unity-MCP 패키지 설치**
 
 Unity 프로젝트에서 이 플러그인을 설치하면 자동으로 Unity-MCP Installer 다운로드를 묻습니다:
 ```bash
 bash .claude-plugin/install.sh
 # → "Unity-MCP Installer를 다운로드하시겠습니까? (y/n)"
-# → y 입력 시 unitypackage 다운로드
-# → Unity 에디터 자동 임포트 시도 (선택)
+# → y 입력 시 AI-Game-Dev-Installer.unitypackage 다운로드
 ```
 
-**수동 설치**
+다운로드된 `AI-Game-Dev-Installer.unitypackage`를 Unity 에디터에 드래그앤드롭하여 임포트합니다.
 
-1. Installer 다운로드:
-   - https://github.com/IvanMurzak/Unity-MCP/releases/latest
-   - `AI-Game-Dev-Installer.unitypackage` 다운로드
+**Step 2: MCP 서버 시작**
 
-2. Unity에 임포트:
-   - 다운로드한 파일을 Unity 에디터에 드래그앤드롭
-   - 또는 Assets > Import Package > Custom Package
+```bash
+.claude/scripts/setup-unity-mcp.sh start
+```
 
-3. MCP 서버 빌드:
-   ```
-   Unity 에디터 > Window > AI Game Developer (Unity-MCP) > Build Server
-   ```
+서버 관리 명령어:
+| 명령어 | 설명 |
+|--------|------|
+| `setup-unity-mcp.sh start` | 서버 시작 |
+| `setup-unity-mcp.sh stop` | 서버 중지 |
+| `setup-unity-mcp.sh status` | 서버 상태 확인 |
 
-4. Claude Code 연결:
-   ```bash
-   .claude/scripts/setup-unity-mcp.sh
-   ```
+**Step 3: Unity에서 연결**
+
+1. Unity 에디터에서 `Window > AI Game Developer` 열기
+2. **Connect** 버튼 클릭
+
+> **참고**: 포트 불일치 시 `setup-unity-mcp.sh`가 자동으로 Unity 설정을 수정합니다.
 
 #### 사용 예시
 
