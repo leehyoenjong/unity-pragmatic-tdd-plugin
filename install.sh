@@ -69,45 +69,89 @@ fi
 # Unity 프로젝트 감지 및 Unity-MCP 자동 설치
 MANIFEST_PATH="Packages/manifest.json"
 UNITY_MCP_PACKAGE="com.ivanmurzak.unity.mcp"
-UNITY_MCP_GIT_URL="https://github.com/IvanMurzak/Unity-MCP.git"
 
 if [ -f "$MANIFEST_PATH" ]; then
     echo ""
     echo -e "${CYAN}🎮 Unity 프로젝트 감지됨${NC}"
 
-    # Unity-MCP가 이미 설치되어 있는지 확인
-    if grep -q "$UNITY_MCP_PACKAGE" "$MANIFEST_PATH" 2>/dev/null; then
+    # Unity-MCP가 이미 설치되어 있는지 확인 (manifest.json 또는 Packages 폴더)
+    if grep -q "$UNITY_MCP_PACKAGE" "$MANIFEST_PATH" 2>/dev/null || [ -d "Packages/$UNITY_MCP_PACKAGE" ] || [ -d "Assets/Plugins/Unity-MCP" ]; then
         echo -e "${GREEN}✅ Unity-MCP가 이미 설치되어 있습니다.${NC}"
     else
-        echo -e "${YELLOW}Unity-MCP를 manifest.json에 추가하시겠습니까? (y/n)${NC}"
+        echo -e "${YELLOW}Unity-MCP Installer를 다운로드하시겠습니까? (y/n)${NC}"
         read -r INSTALL_MCP
 
         if [ "$INSTALL_MCP" = "y" ] || [ "$INSTALL_MCP" = "Y" ]; then
-            # manifest.json에 Unity-MCP 추가
-            # jq가 있으면 사용, 없으면 sed 사용
-            if command -v jq &> /dev/null; then
-                # jq를 사용한 안전한 JSON 수정
-                jq --arg pkg "$UNITY_MCP_PACKAGE" --arg url "$UNITY_MCP_GIT_URL" \
-                   '.dependencies[$pkg] = $url' "$MANIFEST_PATH" > "${MANIFEST_PATH}.tmp" && \
-                   mv "${MANIFEST_PATH}.tmp" "$MANIFEST_PATH"
-                echo -e "${GREEN}✅ Unity-MCP가 manifest.json에 추가되었습니다.${NC}"
+            # 최신 버전 unitypackage URL 생성
+            if [ -n "$UNITY_MCP_LATEST" ]; then
+                INSTALLER_URL="https://github.com/IvanMurzak/Unity-MCP/releases/download/${UNITY_MCP_LATEST}/AI-Game-Dev-Installer.unitypackage"
             else
-                # sed를 사용한 JSON 수정 (jq 없을 때)
-                if grep -q '"dependencies"' "$MANIFEST_PATH"; then
-                    sed -i.bak 's/"dependencies": {/"dependencies": {\n    "'"$UNITY_MCP_PACKAGE"'": "'"$UNITY_MCP_GIT_URL"'",/' "$MANIFEST_PATH"
-                    rm -f "${MANIFEST_PATH}.bak"
-                    echo -e "${GREEN}✅ Unity-MCP가 manifest.json에 추가되었습니다.${NC}"
-                else
-                    echo -e "${RED}❌ manifest.json 형식을 인식할 수 없습니다.${NC}"
-                    echo "   수동으로 추가해주세요: $UNITY_MCP_GIT_URL"
-                fi
+                INSTALLER_URL="https://github.com/IvanMurzak/Unity-MCP/releases/latest/download/AI-Game-Dev-Installer.unitypackage"
             fi
 
-            echo ""
-            echo -e "${YELLOW}⚠️  다음 단계:${NC}"
-            echo "   1. Unity 에디터를 열면 패키지가 자동으로 설치됩니다."
-            echo "   2. Window > AI Game Developer (Unity-MCP) > Build Server"
-            echo "   3. .claude/scripts/setup-unity-mcp.sh 실행"
+            INSTALLER_PATH="AI-Game-Dev-Installer.unitypackage"
+
+            echo -e "${CYAN}📥 Unity-MCP Installer 다운로드 중...${NC}"
+            if curl -fsSL -o "$INSTALLER_PATH" "$INSTALLER_URL" 2>/dev/null; then
+                echo -e "${GREEN}✅ 다운로드 완료: $INSTALLER_PATH${NC}"
+
+                # Unity 에디터 경로 찾기 (macOS)
+                UNITY_EDITOR=""
+                if [[ "$(uname -s)" == "Darwin" ]]; then
+                    # Unity Hub에서 설치된 에디터 찾기
+                    if [ -d "/Applications/Unity/Hub/Editor" ]; then
+                        UNITY_VERSION=$(ls -1 "/Applications/Unity/Hub/Editor" 2>/dev/null | sort -V | tail -1)
+                        if [ -n "$UNITY_VERSION" ]; then
+                            UNITY_EDITOR="/Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity"
+                        fi
+                    fi
+                elif [[ "$(uname -s)" == "MINGW"* ]] || [[ "$(uname -s)" == "MSYS"* ]]; then
+                    # Windows
+                    if [ -d "C:/Program Files/Unity/Hub/Editor" ]; then
+                        UNITY_VERSION=$(ls -1 "C:/Program Files/Unity/Hub/Editor" 2>/dev/null | sort -V | tail -1)
+                        if [ -n "$UNITY_VERSION" ]; then
+                            UNITY_EDITOR="C:/Program Files/Unity/Hub/Editor/$UNITY_VERSION/Editor/Unity.exe"
+                        fi
+                    fi
+                fi
+
+                # 자동 임포트 시도 여부 확인
+                if [ -n "$UNITY_EDITOR" ] && [ -f "$UNITY_EDITOR" ]; then
+                    echo ""
+                    echo -e "${YELLOW}Unity 에디터를 찾았습니다: $UNITY_VERSION${NC}"
+                    echo -e "${YELLOW}자동으로 임포트를 시도하시겠습니까? (y/n)${NC}"
+                    echo -e "${CYAN}   (Unity가 실행 중이면 'n'을 선택하세요)${NC}"
+                    read -r AUTO_IMPORT
+
+                    if [ "$AUTO_IMPORT" = "y" ] || [ "$AUTO_IMPORT" = "Y" ]; then
+                        echo -e "${CYAN}🔄 Unity 에디터로 패키지 임포트 중... (시간이 걸릴 수 있습니다)${NC}"
+                        PROJECT_PATH="$(pwd)"
+                        "$UNITY_EDITOR" -projectPath "$PROJECT_PATH" -importPackage "$PROJECT_PATH/$INSTALLER_PATH" -quit -batchmode 2>/dev/null && {
+                            echo -e "${GREEN}✅ Unity-MCP 패키지 임포트 완료!${NC}"
+                            rm -f "$INSTALLER_PATH"
+                        } || {
+                            echo -e "${YELLOW}⚠️  자동 임포트 실패. 수동으로 임포트해주세요.${NC}"
+                        }
+                    fi
+                fi
+
+                # 수동 임포트 안내 (자동 실패 또는 선택 안함)
+                if [ -f "$INSTALLER_PATH" ]; then
+                    echo ""
+                    echo -e "${GREEN}📦 다음 단계:${NC}"
+                    echo "   1. Unity 에디터를 엽니다"
+                    echo "   2. $INSTALLER_PATH 파일을 Unity에 드래그앤드롭"
+                    echo "      또는 Assets > Import Package > Custom Package"
+                    echo "   3. Import 클릭"
+                    echo ""
+                    echo -e "${YELLOW}⚠️  임포트 후:${NC}"
+                    echo "   1. Window > AI Game Developer (Unity-MCP) > Build Server"
+                    echo "   2. .claude/scripts/setup-unity-mcp.sh 실행"
+                fi
+            else
+                echo -e "${RED}❌ 다운로드 실패. 수동으로 설치해주세요.${NC}"
+                echo "   URL: $INSTALLER_URL"
+            fi
         else
             echo -e "${CYAN}Unity-MCP 설치를 건너뜁니다.${NC}"
         fi
@@ -141,14 +185,17 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo -e "${CYAN}🤖 Unity-MCP 수동 설정 (필요시):${NC}"
 echo ""
-echo "   1. Unity 에디터에서 패키지 설치:"
-echo "      Package Manager > Add package from git URL:"
-echo "      https://github.com/IvanMurzak/Unity-MCP.git"
+echo "   1. Installer 다운로드:"
+echo "      https://github.com/IvanMurzak/Unity-MCP/releases/latest"
+echo "      → AI-Game-Dev-Installer.unitypackage 다운로드"
 echo ""
-echo "   2. MCP 서버 빌드:"
+echo "   2. Unity에 임포트:"
+echo "      다운로드한 파일을 Unity 에디터에 드래그앤드롭"
+echo ""
+echo "   3. MCP 서버 빌드:"
 echo "      Window > AI Game Developer (Unity-MCP) > Build Server"
 echo ""
-echo "   3. Claude Code 연결:"
+echo "   4. Claude Code 연결:"
 echo "      .claude/scripts/setup-unity-mcp.sh 실행"
 echo ""
 echo "   자세한 정보: https://github.com/IvanMurzak/Unity-MCP"
