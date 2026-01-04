@@ -216,6 +216,17 @@ public class Pet : IStatModifier
 cd .claude-plugin && git pull
 ```
 
+## 참고 자료
+
+이 플러그인의 서브에이전트, 스킬, 스크립트 구조는 다음 자료를 참고하여 개발되었습니다:
+
+- [Claude Code 서브에이전트 활용 영상](https://www.youtube.com/watch?v=GL3LXWBZfy0) - 서브에이전트, 스킬, 스크립트 구조 참고
+
+### 추가 참고 문서
+
+- [Claude Code Subagents 공식 문서](https://code.claude.com/docs/en/sub-agents)
+- [Skills vs Commands vs Subagents 비교](https://alexop.dev/posts/claude-code-customization-guide-claudemd-skills-subagents/)
+
 ## 라이선스
 
 MIT
