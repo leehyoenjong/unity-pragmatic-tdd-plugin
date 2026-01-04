@@ -30,9 +30,9 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 
 | 에이전트 | 역할 | 모델 |
 |---------|-----|-----|
-| `architect` | 시스템 설계, 인터페이스, OCP 확장점 | sonnet |
-| `implementer` | Pure C# 구현, TDD 테스트 작성 | sonnet |
-| `reviewer` | SOLID 검토, 안전성 평가 | haiku |
+| `architect` | 시스템 설계, 인터페이스, OCP 확장점 | opus |
+| `implementer` | Pure C# 구현, TDD 테스트 작성 | opus |
+| `reviewer` | SOLID 검토, 안전성 평가 | opus |
 
 ### 스크립트
 

@@ -2,7 +2,7 @@
 name: reviewer
 description: SOLID 원칙 검토 및 프로젝트 단계별 안전성 평가
 tools: Read, Glob, Grep
-model: haiku
+model: opus
 ---
 
 # Unity Code Reviewer
@@ -92,7 +92,7 @@ model: haiku
 
 ## 모델 선택 이유
 
-이 에이전트는 `haiku` 모델을 사용합니다:
-- 체크리스트 기반 단순 검토
-- 빠른 피드백 필요
-- 비용 효율적
+이 에이전트는 `opus` 모델을 사용합니다:
+- 깊이 있는 SOLID 분석
+- 정확한 안전성 평가
+- 고품질 개선 제안

@@ -2,7 +2,7 @@
 name: architect
 description: Unity 시스템 아키텍처 설계 및 인터페이스 정의 (OCP 중심)
 tools: Read, Write, Edit, Glob, Grep
-model: sonnet
+model: opus
 ---
 
 # Unity System Architect

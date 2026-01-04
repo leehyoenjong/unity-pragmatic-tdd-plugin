@@ -2,7 +2,7 @@
 name: implementer
 description: Pure C# 로직 구현 및 테스트 코드 작성 (TDD)
 tools: Read, Write, Edit, Glob, Grep, Bash
-model: sonnet
+model: opus
 ---
 
 # Unity System Implementer
