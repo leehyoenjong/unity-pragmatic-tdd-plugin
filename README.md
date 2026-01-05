@@ -66,12 +66,11 @@ Claude Code 작업 완료 시 자동으로 알림을 표시합니다.
 
 ## 설치
 
+Claude Code에서 실행:
+
 ```bash
-# 프로젝트 루트에서 실행
-cd /tmp && rm -rf unity-pragmatic-tdd-plugin 2>/dev/null && git clone --depth 1 \
-  git@github.com:leehyoenjong/unity-pragmatic-tdd-plugin.git && rm -rf \
-  unity-pragmatic-tdd-plugin/.git && cd - && rm -rf .claude-plugin 2>/dev/null && mv \
-  /tmp/unity-pragmatic-tdd-plugin .claude-plugin && bash .claude-plugin/install.sh
+/plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
+/plugin install unity-pragmatic-tdd
 ```
 
 ## 사용법
@@ -194,36 +193,18 @@ Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입�
 
 #### 설치 방법
 
-**Step 1: Unity-MCP 패키지 설치**
+**Step 1: Unity-MCP 패키지 다운로드**
 
-Unity 프로젝트에서 이 플러그인을 설치하면 자동으로 Unity-MCP Installer 다운로드를 묻습니다:
-```bash
-bash .claude-plugin/install.sh
-# → "Unity-MCP Installer를 다운로드하시겠습니까? (y/n)"
-# → y 입력 시 AI-Game-Dev-Installer.unitypackage 다운로드
-```
+[Unity-MCP Releases](https://github.com/IvanMurzak/Unity-MCP/releases/latest)에서 `AI-Game-Dev-Installer.unitypackage` 다운로드
 
-다운로드된 `AI-Game-Dev-Installer.unitypackage`를 Unity 에디터에 드래그앤드롭하여 임포트합니다.
+**Step 2: Unity에 임포트**
 
-**Step 2: MCP 서버 시작**
-
-```bash
-.claude/scripts/setup-unity-mcp.sh start
-```
-
-서버 관리 명령어:
-| 명령어 | 설명 |
-|--------|------|
-| `setup-unity-mcp.sh start` | 서버 시작 |
-| `setup-unity-mcp.sh stop` | 서버 중지 |
-| `setup-unity-mcp.sh status` | 서버 상태 확인 |
+다운로드한 파일을 Unity 에디터에 드래그앤드롭하여 임포트
 
 **Step 3: Unity에서 연결**
 
 1. Unity 에디터에서 `Window > AI Game Developer` 열기
 2. **Connect** 버튼 클릭
-
-> **참고**: 포트 불일치 시 `setup-unity-mcp.sh`가 자동으로 Unity 설정을 수정합니다.
 
 #### 사용 예시
 
@@ -299,7 +280,7 @@ bash .claude-plugin/install.sh
 ## 업데이트
 
 ```bash
-cd .claude-plugin && git pull
+/plugin marketplace update
 ```
 
 ## 참고 자료
