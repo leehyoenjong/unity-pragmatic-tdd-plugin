@@ -39,13 +39,14 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 | 스크립트 | 용도 |
 |---------|-----|
 | `create-structure.sh` | 폴더/빈 파일 생성 (XX_ 규칙 적용) |
+| `enable.sh` | 프로젝트별 플러그인 활성화 |
 
 ### 알림 (Hooks)
 
 Claude Code 작업 완료 시 자동으로 알림을 표시합니다.
 
 ```
-[unity-pragmatic-tdd-plugin] 응답 완료
+test 프로젝트 작업이 완료되었습니다
 ```
 
 **지원 플랫폼:**
@@ -57,12 +58,10 @@ Claude Code 작업 완료 시 자동으로 알림을 표시합니다.
 
 | 상태 | 메시지 |
 |------|--------|
-| `end_turn` | 응답 완료 |
-| `max_tokens` | 토큰 한도 도달 |
-| `tool_use` | 도구 사용 완료 |
-| `interrupt` | 사용자 중단 |
-
-> 설정 파일: `.claude/settings.json` (Stop hook)
+| `end_turn` | {프로젝트명} 프로젝트 작업이 완료되었습니다 |
+| `max_tokens` | {프로젝트명} 프로젝트 토큰 한도에 도달했습니다 |
+| `tool_use` | {프로젝트명} 프로젝트 도구 사용이 완료되었습니다 |
+| `interrupt` | {프로젝트명} 프로젝트 사용자에 의해 중단되었습니다 |
 
 ## 설치
 
@@ -74,6 +73,8 @@ Claude Code에서 실행:
 /plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
 /plugin install unity-pragmatic-tdd
 ```
+
+> **참고**: 설치 시 **"Install for you, in this repo only (local scope)"** 선택 권장
 
 ### Step 2: 프로젝트별 활성화
 
@@ -101,7 +102,7 @@ alias enable-tdd='bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragma
 
 ```bash
 cd /path/to/unity/project
-enable-tdd
+enable-tdd -f
 ```
 
 **방법 3: 수동 생성**
@@ -117,6 +118,19 @@ enable-tdd
 ```
 
 > **참고**: 활성화 후 Claude Code 재시작 필요
+
+### Step 3: 초기 설정
+
+Claude Code 재시작 후 실행:
+
+```bash
+/eee_init
+```
+
+초기 설정에서 수행하는 작업:
+- PROJECT_CONTEXT.md 생성 (프로젝트 단계 설정)
+- 추가 도구 설치 안내 (Unity-MCP, claude-mem)
+- .clauderules 파일 생성
 
 ## 사용법
 
@@ -134,7 +148,7 @@ enable-tdd
 
 | 명령어 | 설명 |
 |--------|------|
-| `/eee_init` | 첫 셋팅 |
+| `/eee_init` | 초기 설정 (PROJECT_CONTEXT, 추가 도구 설치 안내) |
 | `/eee_tdd` | TDD 워크플로우 적용 |
 | `/eee_solid` | SOLID 원칙 검토 |
 | `/eee_safety-check` | Beta 단계 기능 안전성 체크 |
@@ -225,6 +239,8 @@ public class Pet : IStatModifier
 
 ## 함께 사용하면 좋은 도구
 
+> `/eee_init` 실행 시 설치 여부를 물어봅니다.
+
 ### [Unity-MCP](https://github.com/IvanMurzak/Unity-MCP)
 
 Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입니다.
@@ -236,50 +252,24 @@ Unity 에디터를 Claude Code에서 직접 제어할 수 있는 MCP 서버입�
 - 자연어로 Unity 작업 요청
 - Editor & Runtime 모두 지원
 
-#### 설치 과정
-
-| Step | 자동/수동 | 작업 |
-|------|----------|------|
-| 1 | 자동 | `install.sh` 실행 → unitypackage 다운로드 |
-| 2 | **수동** | Unity에 unitypackage 드래그앤드롭 |
-| 3 | **수동** | Unity 에디터 한 번 실행 (서버 빌드) |
-| 4 | 자동 | `setup-unity-mcp.sh setup` 실행 |
-| 5 | **수동** | Unity > Window > AI Game Developer > Connect |
-| 6 | **수동** | Claude Code 재시작 |
-
 #### 설치 방법
 
-**Step 1: Unity-MCP 패키지 다운로드** (자동)
+`/eee_init` 실행 시 Unity 프로젝트로 감지되면 설치 여부를 물어봅니다.
+
+**수동 설치:**
 
 ```bash
-bash .claude-plugin/install.sh
-# → "Unity-MCP Installer를 다운로드하시겠습니까? (y/n)" → y
-```
+# 1. Installer 다운로드
+curl -fsSL -o AI-Game-Dev-Installer.unitypackage https://github.com/IvanMurzak/Unity-MCP/releases/latest/download/AI-Game-Dev-Installer.unitypackage
 
-**Step 2: Unity에 임포트** (수동)
-
-다운로드된 `AI-Game-Dev-Installer.unitypackage`를 Unity 에디터에 **드래그앤드롭**
-
-**Step 3: Unity 에디터 실행** (수동)
-
-Unity 에디터를 한 번 실행하면 MCP 서버가 자동으로 빌드됩니다.
-(`Library/mcp-server/` 폴더에 서버 파일 생성)
-
-**Step 4: 전체 설정** (자동)
-
-```bash
+# 2. Unity에 임포트 (드래그앤드롭)
+# 3. Unity 에디터 한 번 실행 (MCP 서버 빌드)
+# 4. 설정
 .claude/scripts/setup-unity-mcp.sh setup
-# 서버 시작 + Claude Code에 MCP 등록 + 포트 자동 수정
+
+# 5. Unity > Window > AI Game Developer > Connect
+# 6. Claude Code 재시작
 ```
-
-**Step 5: Unity에서 연결** (수동)
-
-1. Unity 에디터에서 `Window > AI Game Developer` 열기
-2. **Connect** 버튼 클릭
-
-**Step 6: Claude Code 재시작** (수동)
-
-MCP 등록 후 Claude Code를 **재시작**해야 Unity-MCP 도구가 활성화됩니다.
 
 #### 스크립트 명령어
 
@@ -291,15 +281,9 @@ MCP 등록 후 Claude Code를 **재시작**해야 Unity-MCP 도구가 활성화�
 |--------|------|
 | `start` | MCP 서버 시작 |
 | `stop` | MCP 서버 중지 |
-| `status` | 전체 연결 상태 확인 (5가지 항목) |
+| `status` | 전체 연결 상태 확인 |
 | `register` | Claude Code에 MCP 등록 |
 | `setup` | 전체 설정 (start + register) |
-
-#### 자동화 기능
-
-- **포트 자동 수정**: Unity 설정과 서버 포트가 다르면 자동 수정
-- **상태 확인**: `status` 명령어로 5가지 연결 상태 한눈에 확인
-- **Claude Code 등록**: `register` 명령어로 자동 등록
 
 #### 사용 예시
 
@@ -309,37 +293,24 @@ MCP 등록 후 Claude Code를 **재시작**해야 Unity-MCP 도구가 활성화�
 "Player 스크립트에 점프 기능 추가해줘"
 ```
 
-#### 시너지 효과
-
-| unity-pragmatic-tdd-plugin | + Unity-MCP | 결과 |
-|---------------------------|-------------|------|
-| 인터페이스 설계 (architect) | 코드 생성 | 설계 원칙 준수 코드 자동 생성 |
-| TDD 테스트 작성 | 에디터 제어 | 테스트 → 구현 → 실행 자동화 |
-| SOLID 리뷰 | 리팩토링 적용 | 리뷰 결과 즉시 반영 |
-
 ---
 
 ### [claude-mem](https://github.com/thedotmack/claude-mem)
 
 세션 간 컨텍스트를 자동으로 기억하는 메모리 시스템입니다.
 
-#### 설치 (전역 설치 권장)
+#### 설치 방법
+
+`/eee_init` 실행 시 설치 여부를 물어봅니다.
+
+**수동 설치:**
 
 ```bash
-# Claude Code에서 실행
 /plugin marketplace add thedotmack/claude-mem
 /plugin install claude-mem
 ```
 
-> **전역 설치**: `~/.claude/plugins/`에 설치되어 모든 프로젝트에서 사용 가능
-
-#### 시너지 효과
-
-| unity-pragmatic-tdd-plugin | + claude-mem | 결과 |
-|---------------------------|--------------|------|
-| 서브에이전트 파이프라인 | 세션 기억 | 이전 시스템 설계 패턴 자동 참조 |
-| PROJECT_CONTEXT.md | 히스토리 검색 | 단계 전환 이력 추적 |
-| SOLID 리뷰 | 과거 피드백 기억 | 반복 실수 방지 |
+> **전역 설치 권장**: 모든 프로젝트에서 사용 가능
 
 #### 장점
 
@@ -357,25 +328,36 @@ MCP 등록 후 Claude Code를 **재시작**해야 Unity-MCP 도구가 활성화�
 | **저장 공간** | `~/.claude-mem/`에 SQLite DB 저장 |
 | **민감 정보** | `<private>` 태그로 저장 제외 가능 |
 
-#### 병렬 작업 시 참고
+---
 
-여러 터미널에서 동시 작업 시:
+### 시너지 효과
 
-```
-터미널 1: Inventory 시스템     터미널 2: Combat 시스템
-        ↓                           ↓
-    ┌─────────────────────────────────────┐
-    │   claude-mem 공유 DB                 │
-    │   (서로의 작업 내역 검색 가능)          │
-    └─────────────────────────────────────┘
-```
-
-⚠️ **같은 파일 동시 수정은 피할 것** - 서로 다른 시스템/폴더 작업 시에만 병렬 작업 권장
+| unity-pragmatic-tdd | + Unity-MCP | + claude-mem | 결과 |
+|---------------------|-------------|--------------|------|
+| 인터페이스 설계 | 코드 생성 | 패턴 기억 | 일관된 설계 자동 적용 |
+| TDD 테스트 작성 | 에디터 제어 | 히스토리 | 테스트 → 구현 자동화 |
+| SOLID 리뷰 | 리팩토링 | 피드백 기억 | 반복 실수 방지 |
 
 ## 업데이트
 
 ```bash
 /plugin marketplace update
+```
+
+## 빠른 시작 요약
+
+```bash
+# 1. 플러그인 설치 (최초 1회)
+/plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
+/plugin install unity-pragmatic-tdd  # local scope 선택
+
+# 2. 프로젝트 활성화 (프로젝트마다)
+bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh -f
+
+# 3. Claude Code 재시작
+
+# 4. 초기 설정
+/eee_init
 ```
 
 ## 참고 자료
