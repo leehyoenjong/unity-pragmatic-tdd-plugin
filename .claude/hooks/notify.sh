@@ -31,7 +31,7 @@ case "$STOP_REASON" in
         REASON_TEXT="사용자 중단"
         ;;
     *)
-        REASON_TEXT="작업 완료"
+        REASON_TEXT="응답 완료"
         ;;
 esac
 
