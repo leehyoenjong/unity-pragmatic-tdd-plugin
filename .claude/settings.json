@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -ExecutionPolicy Bypass -Command \"& { & \\\"$env:USERPROFILE\\.claude\\plugins\\cache\\leehyoenjong-plugins\\unity-pragmatic-tdd\\1.0.0\\.claude\\hooks\\notify.ps1\\\" }\""
+            "command": "powershell -ExecutionPolicy Bypass -Command \"& { & \\\"$env:CLAUDE_PROJECT_DIR\\.claude\\hooks\\notify.ps1\\\" }\""
           }
         ]
       }
