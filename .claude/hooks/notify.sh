@@ -17,24 +17,24 @@ fi
 # Map stop reasons to Korean descriptions
 case "$STOP_REASON" in
     "end_turn")
-        REASON_TEXT="응답 완료"
+        REASON_TEXT="작업이 완료되었습니다"
         ;;
     "max_tokens")
-        REASON_TEXT="토큰 한도 도달"
+        REASON_TEXT="토큰 한도에 도달했습니다"
         ;;
     "tool_use")
-        REASON_TEXT="도구 사용 완료"
+        REASON_TEXT="도구 사용이 완료되었습니다"
         ;;
     "interrupt")
-        REASON_TEXT="사용자 중단"
+        REASON_TEXT="사용자에 의해 중단되었습니다"
         ;;
     *)
-        REASON_TEXT="응답 완료"
+        REASON_TEXT="작업이 완료되었습니다"
         ;;
 esac
 
 TITLE="Claude Code"
-MESSAGE="[$PROJECT_NAME] $REASON_TEXT"
+MESSAGE="$PROJECT_NAME 프로젝트 $REASON_TEXT"
 
 # macOS only
 if [ "$(uname -s)" = "Darwin" ]; then
