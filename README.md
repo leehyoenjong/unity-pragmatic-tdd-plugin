@@ -66,12 +66,57 @@ Claude Code 작업 완료 시 자동으로 알림을 표시합니다.
 
 ## 설치
 
+### Step 1: 마켓플레이스 등록 & 설치
+
 Claude Code에서 실행:
 
 ```bash
 /plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
 /plugin install unity-pragmatic-tdd
 ```
+
+### Step 2: 프로젝트별 활성화
+
+플러그인을 사용할 각 프로젝트에서 활성화가 필요합니다.
+
+**방법 1: 스크립트 사용 (권장)**
+
+```bash
+# 프로젝트 루트에서 실행
+bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh
+
+# 확인 없이 강제 실행
+bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh -f
+```
+
+**방법 2: alias 설정 (편리)**
+
+`~/.zshrc` 또는 `~/.bashrc`에 추가:
+
+```bash
+alias enable-tdd='bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh'
+```
+
+이후 프로젝트에서:
+
+```bash
+cd /path/to/unity/project
+enable-tdd
+```
+
+**방법 3: 수동 생성**
+
+프로젝트 루트에 `.claude/settings.local.json` 파일 생성:
+
+```json
+{
+  "enabledPlugins": {
+    "unity-pragmatic-tdd@leehyoenjong-plugins": true
+  }
+}
+```
+
+> **참고**: 활성화 후 Claude Code 재시작 필요
 
 ## 사용법
 
