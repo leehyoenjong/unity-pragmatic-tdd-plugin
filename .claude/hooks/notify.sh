@@ -1,6 +1,5 @@
 #!/bin/bash
-# Cross-platform notification script for Claude Code
-# Supports: macOS, Windows (Git Bash/PowerShell)
+# macOS notification script for Claude Code
 
 # Read JSON from stdin (Claude Code passes hook data via stdin)
 INPUT=$(cat)
@@ -9,7 +8,6 @@ INPUT=$(cat)
 PROJECT_NAME=$(basename "${CLAUDE_PROJECT_DIR:-$(pwd)}")
 
 # Extract stop reason from JSON input (if available)
-# JSON format: {"stop_hook_active": true, "reason": "end_turn", ...}
 if command -v jq &> /dev/null && [ -n "$INPUT" ]; then
     STOP_REASON=$(echo "$INPUT" | jq -r '.reason // "completed"' 2>/dev/null)
 else
@@ -38,36 +36,10 @@ esac
 TITLE="Claude Code"
 MESSAGE="[$PROJECT_NAME] $REASON_TEXT"
 
-# Detect OS and send notification
-case "$(uname -s)" in
-    Darwin)
-        # macOS - Dialog with sound (auto-close after 5 seconds)
-        osascript -e "display dialog \"$MESSAGE\" with title \"$TITLE\" buttons {\"확인\"} default button 1 giving up after 5" &
-        afplay /System/Library/Sounds/Glass.aiff &
-        ;;
-    MINGW*|MSYS*|CYGWIN*)
-        # Windows (Git Bash, MSYS, Cygwin)
-        powershell.exe -Command "
-            [System.Media.SystemSounds]::Asterisk.Play()
-            Add-Type -AssemblyName System.Windows.Forms
-            [System.Windows.Forms.MessageBox]::Show('$MESSAGE', '$TITLE', 'OK', 'Information')
-        " 2>/dev/null
-        ;;
-    Linux)
-        # Check if running in WSL
-        if grep -qi microsoft /proc/version 2>/dev/null; then
-            # WSL - use Windows notification via PowerShell
-            powershell.exe -Command "
-                [System.Media.SystemSounds]::Asterisk.Play()
-                \$wshell = New-Object -ComObject Wscript.Shell
-                \$wshell.Popup('$MESSAGE', 5, '$TITLE', 0x40)
-            " 2>/dev/null
-        elif command -v notify-send &> /dev/null; then
-            # Native Linux
-            notify-send "$TITLE" "$MESSAGE"
-            paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || true
-        fi
-        ;;
-esac
+# macOS only
+if [ "$(uname -s)" = "Darwin" ]; then
+    osascript -e "display dialog \"$MESSAGE\" with title \"$TITLE\" buttons {\"확인\"} default button 1 giving up after 5" &
+    afplay /System/Library/Sounds/Glass.aiff &
+fi
 
 exit 0
