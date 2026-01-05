@@ -8,5 +8,18 @@
   "keywords": ["unity", "tdd", "solid", "gamedev", "testing", "csharp"],
   "homepage": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
   "repository": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
-  "license": "MIT"
+  "license": "MIT",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/notify.sh\""
+          }
+        ]
+      }
+    ]
+  }
 }

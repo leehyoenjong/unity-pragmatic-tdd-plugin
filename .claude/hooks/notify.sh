@@ -54,8 +54,16 @@ case "$(uname -s)" in
         " 2>/dev/null
         ;;
     Linux)
-        # Linux (optional support)
-        if command -v notify-send &> /dev/null; then
+        # Check if running in WSL
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            # WSL - use Windows notification via PowerShell
+            powershell.exe -Command "
+                [System.Media.SystemSounds]::Asterisk.Play()
+                \$wshell = New-Object -ComObject Wscript.Shell
+                \$wshell.Popup('$MESSAGE', 5, '$TITLE', 0x40)
+            " 2>/dev/null
+        elif command -v notify-send &> /dev/null; then
+            # Native Linux
             notify-send "$TITLE" "$MESSAGE"
             paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || true
         fi
