@@ -5,7 +5,10 @@
       "Bash(dir:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: 플러그인 hooks를 $CLAUDE_PLUGIN_ROOT로 변경하여 설치만으로 알림 작동\n\n- plugin.json에 hooks 설정 추가 \\($CLAUDE_PLUGIN_ROOT 사용\\)\n- notify.sh에 WSL 환경 감지 및 Windows 알림 지원 추가\n- settings.json에서 기존 hooks 제거 \\(plugin.json으로 이관\\)\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git config:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   },
   "enabledPlugins": {
