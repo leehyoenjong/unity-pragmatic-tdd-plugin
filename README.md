@@ -12,7 +12,8 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 
 ### 서브에이전트 파이프라인
 
-"XX 시스템 만들어줘" 요청 시 자동으로 파이프라인 실행:
+#### 개발 파이프라인
+"XX 시스템 만들어줘" 요청 시 자동으로 실행:
 
 ```
 1. 스크립트 → 폴더/파일 생성 (컨텍스트 0)
@@ -21,18 +22,42 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 4. reviewer → SOLID 검토 (독립 컨텍스트)
 ```
 
+#### QA 파이프라인
+"XX QA 해줘" 또는 `/eee_qa-full` 요청 시 자동으로 실행:
+
+```
+1. qa-tech → 기술적 버그 분석
+2. qa-security → 보안 취약점 분석
+3. qa-balance → 밸런스 분석 (선택적)
+4. qa-tc → TC 문서 생성
+5. 종합 리포트 출력
+```
+
 **장점:**
 - 컨텍스트 효율: 기존 대비 ~80% 절약
 - 일관된 구조: XX_FolderName 규칙 자동 적용
 - SOLID 검토 필수 포함
+- 체계적인 QA 프로세스
 
 ### 서브에이전트
+
+#### 개발 에이전트
 
 | 에이전트 | 역할 | 모델 |
 |---------|-----|-----|
 | `architect` | 시스템 설계, 인터페이스, OCP 확장점 | opus |
 | `implementer` | Pure C# 구현, TDD 테스트 작성 | opus |
 | `reviewer` | SOLID 검토, 안전성 평가 | opus |
+
+#### QA 에이전트
+
+| 에이전트 | 역할 | 모델 |
+|---------|-----|-----|
+| `qa-tc` | TC 작성, 테스트 피라미드 설계 (GQA) | opus |
+| `qa-tech` | 코드 분석, 기술적 버그 탐지 (TQA) | opus |
+| `qa-balance` | 밸런스, 경제 시스템, 데이터 분석 (FQA+DQA) | opus |
+| `qa-security` | 어뷰징 방지, 보안 취약점 (CQA) | opus |
+| `qa-release` | 런칭 체크리스트, 패치 검증 (PQA+SQA) | opus |
 
 ### 스크립트
 
@@ -144,18 +169,37 @@ Claude Code 재시작 후 실행:
 
 → 자동으로 파이프라인 실행
 
-### 슬래시 명령어
+### 슬래시 명령어 (10개)
+
+#### 필수
 
 | 명령어 | 설명 |
 |--------|------|
 | `/eee_init` | 초기 설정 (PROJECT_CONTEXT, 추가 도구 설치 안내) |
-| `/eee_tdd` | TDD 워크플로우 적용 |
-| `/eee_solid` | SOLID 원칙 검토 |
-| `/eee_safety-check` | Beta 단계 기능 안전성 체크 |
 | `/eee_transition` | 프로젝트 단계 전환 |
-| `/eee_review` | 코드 리뷰 (안티패턴 체크) |
+
+#### 개발
+
+| 명령어 | 설명 |
+|--------|------|
+| `/eee_tdd` | TDD 워크플로우 적용 |
+| `/eee_review` | 코드 리뷰 (SOLID + 안티패턴 + Beta 안전성) |
+
+#### Git
+
+| 명령어 | 설명 |
+|--------|------|
 | `/eee_commit` | Git 커밋 (Conventional Commits) |
-| `/eee_push` | Git 푸시 |
+| `/eee_sync` | Git 커밋 + 푸시 |
+
+#### QA
+
+| 명령어 | 설명 |
+|--------|------|
+| `/eee_bug-check` | 기술적 버그 분석 - 6가지 버그 패턴 |
+| `/eee_security` | 보안 취약점 분석 - 어뷰징, 돈복사 방지 |
+| `/eee_qa-full` | 전체 QA 파이프라인 실행 |
+| `/eee_precommit` | 커밋 전 빠른 QA 검증 (Critical/High만) |
 
 ## 폴더 구조
 
@@ -231,10 +275,22 @@ public class Pet : IStatModifier
 - `performance-solid.md` - SOLID 성능 고려사항 (GC, Hot Path 최적화)
 
 ### Agents & Pipelines
+
+#### 개발 에이전트
 - `.claude/agents/architect.md` - 시스템 설계 에이전트
 - `.claude/agents/implementer.md` - 구현 에이전트
 - `.claude/agents/reviewer.md` - 리뷰 에이전트
+
+#### QA 에이전트
+- `.claude/agents/qa-tc.md` - TC 작성 에이전트 (GQA)
+- `.claude/agents/qa-tech.md` - 기술 버그 탐지 에이전트 (TQA)
+- `.claude/agents/qa-balance.md` - 밸런스/경제 분석 에이전트 (FQA+DQA)
+- `.claude/agents/qa-security.md` - 보안/어뷰징 방지 에이전트 (CQA)
+- `.claude/agents/qa-release.md` - 런칭/패치 검수 에이전트 (PQA+SQA)
+
+#### Pipelines & Scripts
 - `.claude/pipelines/new-system.md` - 새 시스템 생성 파이프라인
+- `.claude/pipelines/qa-pipeline.md` - 전체 QA 검증 파이프라인
 - `.claude/scripts/create-structure.sh` - 폴더 구조 생성 스크립트
 
 ## 함께 사용하면 좋은 도구
@@ -343,6 +399,8 @@ curl -fsSL -o AI-Game-Dev-Installer.unitypackage https://github.com/IvanMurzak/U
 ```bash
 /plugin marketplace update
 ```
+
+변경 내역은 [CHANGELOG.md](./CHANGELOG.md)를 참고하세요.
 
 ## 빠른 시작 요약
 

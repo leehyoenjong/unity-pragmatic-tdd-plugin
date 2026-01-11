@@ -287,6 +287,11 @@ Located in `.claude/agents/`:
 | `architect` | 시스템 설계, 인터페이스, OCP 확장점 | opus |
 | `implementer` | Pure C# 구현, TDD 테스트 작성 | opus |
 | `reviewer` | SOLID 검토, 안전성 평가 | opus |
+| `qa-tc` | TC 작성, 테스트 피라미드 설계 (GQA) | opus |
+| `qa-tech` | 코드 분석, 기술적 버그 탐지 (TQA) | opus |
+| `qa-balance` | 밸런스, 경제 시스템, 데이터 분석 (FQA+DQA) | opus |
+| `qa-security` | 어뷰징 방지, 보안 취약점 (CQA) | opus |
+| `qa-release` | 런칭 체크리스트, 패치 검증 (PQA+SQA) | opus |
 
 ### 스크립트 (컨텍스트 절약)
 Located in `.claude/scripts/`:
