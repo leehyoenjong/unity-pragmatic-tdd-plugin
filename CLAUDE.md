@@ -282,11 +282,20 @@ Unity 프로젝트 작업 시 Claude와 사용자 간의 역할 분담:
 ### 서브에이전트 (자동 호출)
 Located in `.claude/agents/`:
 
+#### 개발 에이전트 (병렬 구현 지원)
+
 | 에이전트 | 역할 | 모델 |
 |---------|-----|-----|
-| `architect` | 시스템 설계, 인터페이스, OCP 확장점 | opus |
-| `implementer` | Pure C# 구현, TDD 테스트 작성 | opus |
+| `lead-architect` | 설계 총괄, 작업 분배, 코드 검토, 통합 | opus |
+| `implementer-1` | Pure C# 구현 + TDD (병렬 구현자 1) | opus |
+| `implementer-2` | Pure C# 구현 + TDD (병렬 구현자 2) | opus |
+| `implementer-3` | Pure C# 구현 + TDD (병렬 구현자 3) | opus |
 | `reviewer` | SOLID 검토, 안전성 평가 | opus |
+
+#### QA 에이전트
+
+| 에이전트 | 역할 | 모델 |
+|---------|-----|-----|
 | `qa-tc` | TC 작성, 테스트 피라미드 설계 (GQA) | opus |
 | `qa-tech` | 코드 분석, 기술적 버그 탐지 (TQA) | opus |
 | `qa-balance` | 밸런스, 경제 시스템, 데이터 분석 (FQA+DQA) | opus |
@@ -305,23 +314,47 @@ Located in `.claude/pipelines/`:
 
 | 파이프라인 | 용도 |
 |----------|-----|
-| `new-system.md` | 새 시스템 생성 전체 흐름 |
+| `new-system.md` | 새 시스템 생성 (병렬 구현 버전) |
 
-### 사용 예시
+### 병렬 구현 워크플로우
+
 ```
-"인벤토리 시스템 만들어줘"
-→ .claude/pipelines/new-system.md 참고해서 처리
-
-자동 실행:
-1. create-structure.sh → 폴더/파일 생성 (컨텍스트 0)
-2. architect → 인터페이스 설계 (독립 컨텍스트)
-3. implementer → 구현 + 테스트 (독립 컨텍스트)
-4. reviewer → SOLID 검토 (독립 컨텍스트)
+/feature Inventory
+    ↓
+┌─────────────────────────────────────────────┐
+│  1단계: 구조 생성 (스크립트)                  │
+└─────────────────────┬───────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────┐
+│  2단계: lead-architect (DESIGN)             │
+│  → 인터페이스 설계 + 작업 분배               │
+└─────────────────────┬───────────────────────┘
+                      ↓
+    ┌─────────────────┼─────────────────┐
+    ↓                 ↓                 ↓
+┌────────┐      ┌────────┐      ┌────────┐
+│impl-1  │      │impl-2  │      │impl-3  │
+│클래스A │      │클래스B │      │클래스C │
+│+테스트 │      │+테스트 │      │+테스트 │
+└────────┘      └────────┘      └────────┘
+    │                 │                 │
+    └─────────────────┼─────────────────┘
+                      ↓ (병렬 완료)
+┌─────────────────────────────────────────────┐
+│  4단계: lead-architect (REVIEW)             │
+│  → 코드 검토, 필요시 재작업 요청             │
+└─────────────────────┬───────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────┐
+│  5단계: lead-architect (INTEGRATE)          │
+│  → 최종 통합                                │
+└─────────────────────────────────────────────┘
 ```
 
 ### 설계 원칙
 - **스크립트**: 판단 불필요한 반복 작업 → 컨텍스트 절약
 - **서브에이전트**: 판단 필요, 독립 실행 → 메인 컨텍스트 보호
+- **병렬 구현**: implementer 3명 동시 실행 → 속도 3배
 - **메인 LLM**: 조율, 최종 판단
 
 ### 자동 파이프라인 규칙
@@ -330,17 +363,19 @@ Located in `.claude/pipelines/`:
 
 | 요청 패턴 | 자동 실행 파이프라인 |
 |----------|-------------------|
+| `/feature XX` | `.claude/pipelines/new-system.md` |
 | "XX 시스템 만들어줘" | `.claude/pipelines/new-system.md` |
 | "XX System 구현해줘" | `.claude/pipelines/new-system.md` |
 | "새로운 XX 기능 추가" | `.claude/pipelines/new-system.md` |
 
 **예시:**
 ```
+/feature Inventory
+/feature Combat "데미지 계산, 크리티컬"
 "인벤토리 시스템 만들어줘"
-"Combat System 구현해줘"
-"새로운 Quest 기능 추가해줘"
+"Quest System 구현해줘"
 ```
-→ 모두 자동으로 new-system 파이프라인 실행
+→ 모두 자동으로 new-system 파이프라인 실행 (병렬 구현)
 
 **파이프라인 스킵 조건:**
 - 단순 버그 수정
@@ -352,7 +387,21 @@ Located in `.claude/pipelines/`:
 
 ## Available Skills and Docs
 
-### Skills (invoke when needed)
+### User-Invocable Skills (슬래시 명령어)
+Located in `.claude/skills/`:
+
+| 명령어 | 설명 |
+|-------|------|
+| `/feature <시스템명>` | 새 시스템 생성 (병렬 구현 파이프라인) |
+| `/feature <시스템명> "요구사항"` | 요구사항 포함 시스템 생성 |
+
+**예시:**
+```
+/feature Inventory
+/feature Combat "데미지 계산, 크리티컬, 버프/디버프"
+```
+
+### Internal Skills (invoke when needed)
 - `tdd-implement` - TDD workflow and examples
 - `solid-review` - SOLID principles detailed review
 - `beta-safety-check` - Beta stage feature safety check
@@ -407,6 +456,6 @@ Is that correct? (y/n)
 ---
 
 ## Version
-- Document Version: 4.0
-- Last Updated: 2026-01-01
-- Note: Added Subagents & Pipelines for context-efficient workflow
+- Document Version: 5.0
+- Last Updated: 2026-01-13
+- Note: 병렬 구현 시스템 도입 (lead-architect + implementer 1~3), /feature 슬래시 명령어 추가

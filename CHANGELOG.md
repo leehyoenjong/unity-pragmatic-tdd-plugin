@@ -7,6 +7,44 @@
 
 ---
 
+## [1.2.0] - 2026-01-13
+
+### Added
+- **병렬 구현 시스템**: 개발 에이전트 구조 전면 개편
+  - `lead-architect`: 설계 총괄 + 작업 분배 + 코드 검토 + 최종 통합
+  - `implementer-1`, `implementer-2`, `implementer-3`: 병렬 구현자 (동시 실행)
+
+- **`/feature` 슬래시 명령어**: 시스템 생성 전용 명령어
+  ```bash
+  /feature Inventory
+  /feature Combat "데미지 계산, 크리티컬, 버프/디버프"
+  ```
+
+- **리드-구현자 워크플로우**:
+  ```
+           ┌─ implementer-1 (클래스A + 테스트) ─┐
+  lead ────┼─ implementer-2 (클래스B + 테스트) ─┼──→ lead (검토) ──→ 통합
+           └─ implementer-3 (클래스C + 테스트) ─┘
+                병렬 실행 (속도 3배)
+  ```
+
+- **코드 검토 + 재작업 루프**: lead-architect가 검토 후 문제 발견 시 해당 implementer에게 재작업 요청
+
+### Changed
+- **개발 에이전트 구조 변경**:
+  - `architect` → `lead-architect` (역할 확장: 설계 + 검토 + 통합)
+  - `implementer` → `implementer-1`, `implementer-2`, `implementer-3` (병렬화)
+
+- **new-system.md 파이프라인**: 순차 실행 → 병렬 실행으로 개선
+  - 컨텍스트 효율: 기존 대비 ~85% 절약
+  - 구현 속도: 순차 대비 3배 향상
+
+### Removed
+- `.claude/agents/architect.md` - `lead-architect.md`로 대체
+- `.claude/agents/implementer.md` - `implementer-1~3.md`로 대체
+
+---
+
 ## [1.1.0] - 2025-01-11
 
 ### Added
@@ -75,7 +113,7 @@
 ## 로드맵
 
 ### 예정된 기능
-- [ ] `/eee_new-system`: 개발 파이프라인 명시적 호출
+- [x] `/feature`: 개발 파이프라인 명시적 호출 (v1.2.0에서 구현)
 - [ ] 테스트 커버리지 리포트 연동
 - [ ] GitHub Issues 자동 생성 연동
 

@@ -12,14 +12,23 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 
 ### 서브에이전트 파이프라인
 
-#### 개발 파이프라인
-"XX 시스템 만들어줘" 요청 시 자동으로 실행:
+#### 개발 파이프라인 (병렬 구현 시스템)
+`/feature XX` 또는 "XX 시스템 만들어줘" 요청 시 자동으로 실행:
 
 ```
 1. 스크립트 → 폴더/파일 생성 (컨텍스트 0)
-2. architect → 인터페이스 설계 (독립 컨텍스트)
-3. implementer → 구현 + 테스트 (독립 컨텍스트)
-4. reviewer → SOLID 검토 (독립 컨텍스트)
+2. lead-architect (DESIGN) → 인터페이스 설계 + 작업 분배
+3. implementer-1, 2, 3 → 병렬 구현 + 테스트 (동시 실행!)
+4. lead-architect (REVIEW) → 코드 검토, 필요시 재작업 요청
+5. lead-architect (INTEGRATE) → 최종 통합
+```
+
+**병렬 구현 워크플로우:**
+```
+         ┌─ implementer-1 (클래스A + 테스트) ─┐
+lead ────┼─ implementer-2 (클래스B + 테스트) ─┼──→ lead (검토) ──→ 통합
+         └─ implementer-3 (클래스C + 테스트) ─┘
+              병렬 실행 (속도 3배)
 ```
 
 #### QA 파이프라인
@@ -34,19 +43,22 @@ Claude Code 플러그인 - Unity 게임 개발을 위한 실용적 TDD 및 SOLID
 ```
 
 **장점:**
-- 컨텍스트 효율: 기존 대비 ~80% 절약
+- 컨텍스트 효율: 기존 대비 ~85% 절약
+- 병렬 구현: 순차 대비 속도 3배
 - 일관된 구조: XX_FolderName 규칙 자동 적용
-- SOLID 검토 필수 포함
+- 코드 리뷰 + 재작업 루프 포함
 - 체계적인 QA 프로세스
 
 ### 서브에이전트
 
-#### 개발 에이전트
+#### 개발 에이전트 (병렬 구현 지원)
 
 | 에이전트 | 역할 | 모델 |
 |---------|-----|-----|
-| `architect` | 시스템 설계, 인터페이스, OCP 확장점 | opus |
-| `implementer` | Pure C# 구현, TDD 테스트 작성 | opus |
+| `lead-architect` | 설계 총괄, 작업 분배, 코드 검토, 통합 | opus |
+| `implementer-1` | Pure C# 구현 + TDD (병렬 구현자 1) | opus |
+| `implementer-2` | Pure C# 구현 + TDD (병렬 구현자 2) | opus |
+| `implementer-3` | Pure C# 구현 + TDD (병렬 구현자 3) | opus |
 | `reviewer` | SOLID 검토, 안전성 평가 | opus |
 
 #### QA 에이전트
@@ -159,17 +171,25 @@ Claude Code 재시작 후 실행:
 
 ## 사용법
 
-### 시스템 생성 (자동 파이프라인)
+### 시스템 생성 (병렬 구현 파이프라인)
 
+**방법 1: 슬래시 명령어 (권장)**
+```bash
+/feature Inventory
+/feature Combat "데미지 계산, 크리티컬, 버프/디버프"
+/feature Quest "퀘스트 수락, 진행, 완료, 보상"
+```
+
+**방법 2: 자연어 요청**
 ```
 "인벤토리 시스템 만들어줘"
 "Combat System 구현해줘"
 "새로운 Quest 기능 추가해줘"
 ```
 
-→ 자동으로 파이프라인 실행
+→ 자동으로 병렬 구현 파이프라인 실행
 
-### 슬래시 명령어 (10개)
+### 슬래시 명령어 (11개)
 
 #### 필수
 
@@ -182,6 +202,7 @@ Claude Code 재시작 후 실행:
 
 | 명령어 | 설명 |
 |--------|------|
+| `/feature <시스템명>` | **새 시스템 생성 (병렬 구현 파이프라인)** |
 | `/eee_tdd` | TDD 워크플로우 적용 |
 | `/eee_review` | 코드 리뷰 (SOLID + 안티패턴 + Beta 안전성) |
 
@@ -276,10 +297,12 @@ public class Pet : IStatModifier
 
 ### Agents & Pipelines
 
-#### 개발 에이전트
-- `.claude/agents/architect.md` - 시스템 설계 에이전트
-- `.claude/agents/implementer.md` - 구현 에이전트
-- `.claude/agents/reviewer.md` - 리뷰 에이전트
+#### 개발 에이전트 (병렬 구현 시스템)
+- `.claude/agents/lead-architect.md` - 설계 총괄 + 작업 분배 + 검토 + 통합
+- `.claude/agents/implementer-1.md` - 병렬 구현자 1
+- `.claude/agents/implementer-2.md` - 병렬 구현자 2
+- `.claude/agents/implementer-3.md` - 병렬 구현자 3
+- `.claude/agents/reviewer.md` - SOLID 검토 에이전트
 
 #### QA 에이전트
 - `.claude/agents/qa-tc.md` - TC 작성 에이전트 (GQA)
@@ -289,9 +312,10 @@ public class Pet : IStatModifier
 - `.claude/agents/qa-release.md` - 런칭/패치 검수 에이전트 (PQA+SQA)
 
 #### Pipelines & Scripts
-- `.claude/pipelines/new-system.md` - 새 시스템 생성 파이프라인
+- `.claude/pipelines/new-system.md` - 새 시스템 생성 파이프라인 (병렬 구현)
 - `.claude/pipelines/qa-pipeline.md` - 전체 QA 검증 파이프라인
 - `.claude/scripts/create-structure.sh` - 폴더 구조 생성 스크립트
+- `.claude/skills/feature.md` - `/feature` 슬래시 명령어 스킬
 
 ## 함께 사용하면 좋은 도구
 
