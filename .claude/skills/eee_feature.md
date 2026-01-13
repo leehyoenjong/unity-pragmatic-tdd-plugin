@@ -1,4 +1,11 @@
-# Unity 시스템 생성 - 병렬 구현 파이프라인
+---
+name: eee_feature
+description: Unity 시스템/기능 생성 파이프라인 실행
+user_invocable: true
+args: <system_name> [requirements]
+---
+
+# /eee_feature - Unity 시스템 생성
 
 새로운 Unity 시스템을 병렬 구현 파이프라인으로 생성합니다.
 
@@ -18,10 +25,12 @@
 /eee_feature Quest "퀘스트 수락, 진행, 완료, 보상 시스템"
 ```
 
-## 파이프라인 흐름
+## 실행 시 동작
+
+이 명령어 실행 시 다음 파이프라인이 자동으로 실행됩니다:
 
 ```
-1단계: 폴더/파일 구조 생성 (create-structure.sh)
+1단계: 폴더/파일 구조 생성
     ↓
 2단계: Lead Architect - 설계 + 작업 분배
     ↓
@@ -44,11 +53,13 @@
 
 # 실행 지시사항
 
+아래 단계를 순서대로 실행하세요:
+
 ## Step 1: 입력 파싱
 
 ```
-system_name = $ARGUMENTS의 첫 번째 단어
-requirements = $ARGUMENTS의 나머지 부분 (없으면 빈 문자열)
+system_name = args의 첫 번째 단어
+requirements = args의 나머지 부분 (없으면 빈 문자열)
 ```
 
 ## Step 2: PROJECT_CONTEXT.md 확인
