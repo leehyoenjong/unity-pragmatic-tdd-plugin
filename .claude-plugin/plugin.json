@@ -9,6 +9,19 @@
   "homepage": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
   "repository": "https://github.com/JUNGOM/unity-pragmatic-tdd-plugin",
   "license": "MIT",
+  "skills": [
+    ".claude/skills/eee_bug-check.md",
+    ".claude/skills/eee_commit.md",
+    ".claude/skills/eee_feature.md",
+    ".claude/skills/eee_init.md",
+    ".claude/skills/eee_precommit.md",
+    ".claude/skills/eee_qa-full.md",
+    ".claude/skills/eee_review.md",
+    ".claude/skills/eee_security.md",
+    ".claude/skills/eee_sync.md",
+    ".claude/skills/eee_tdd.md",
+    ".claude/skills/eee_transition.md"
+  ],
   "hooks": {
     "Stop": [
       {
