@@ -1,28 +1,28 @@
 ---
-name: feature
+name: eee_feature
 description: Unity 시스템/기능 생성 파이프라인 실행
 user_invocable: true
 args: <system_name> [requirements]
 ---
 
-# /feature - Unity 시스템 생성
+# /eee_feature - Unity 시스템 생성
 
 새로운 Unity 시스템을 병렬 구현 파이프라인으로 생성합니다.
 
 ## 사용법
 
 ```
-/feature <시스템명>
-/feature <시스템명> <요구사항>
+/eee_feature <시스템명>
+/eee_feature <시스템명> <요구사항>
 ```
 
 ## 예시
 
 ```
-/feature Inventory
-/feature Inventory "아이템 추가, 제거, 조회, 정렬 기능"
-/feature Combat "데미지 계산, 크리티컬, 버프/디버프 시스템"
-/feature Quest "퀘스트 수락, 진행, 완료, 보상 시스템"
+/eee_feature Inventory
+/eee_feature Inventory "아이템 추가, 제거, 조회, 정렬 기능"
+/eee_feature Combat "데미지 계산, 크리티컬, 버프/디버프 시스템"
+/eee_feature Quest "퀘스트 수락, 진행, 완료, 보상 시스템"
 ```
 
 ## 실행 시 동작

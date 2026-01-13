@@ -319,7 +319,7 @@ Located in `.claude/pipelines/`:
 ### 병렬 구현 워크플로우
 
 ```
-/feature Inventory
+/eee_feature Inventory
     ↓
 ┌─────────────────────────────────────────────┐
 │  1단계: 구조 생성 (스크립트)                  │
@@ -363,15 +363,15 @@ Located in `.claude/pipelines/`:
 
 | 요청 패턴 | 자동 실행 파이프라인 |
 |----------|-------------------|
-| `/feature XX` | `.claude/pipelines/new-system.md` |
+| `/eee_feature XX` | `.claude/pipelines/new-system.md` |
 | "XX 시스템 만들어줘" | `.claude/pipelines/new-system.md` |
 | "XX System 구현해줘" | `.claude/pipelines/new-system.md` |
 | "새로운 XX 기능 추가" | `.claude/pipelines/new-system.md` |
 
 **예시:**
 ```
-/feature Inventory
-/feature Combat "데미지 계산, 크리티컬"
+/eee_feature Inventory
+/eee_feature Combat "데미지 계산, 크리티컬"
 "인벤토리 시스템 만들어줘"
 "Quest System 구현해줘"
 ```
@@ -392,13 +392,13 @@ Located in `.claude/skills/`:
 
 | 명령어 | 설명 |
 |-------|------|
-| `/feature <시스템명>` | 새 시스템 생성 (병렬 구현 파이프라인) |
-| `/feature <시스템명> "요구사항"` | 요구사항 포함 시스템 생성 |
+| `/eee_feature <시스템명>` | 새 시스템 생성 (병렬 구현 파이프라인) |
+| `/eee_feature <시스템명> "요구사항"` | 요구사항 포함 시스템 생성 |
 
 **예시:**
 ```
-/feature Inventory
-/feature Combat "데미지 계산, 크리티컬, 버프/디버프"
+/eee_feature Inventory
+/eee_feature Combat "데미지 계산, 크리티컬, 버프/디버프"
 ```
 
 ### Internal Skills (invoke when needed)
@@ -458,4 +458,4 @@ Is that correct? (y/n)
 ## Version
 - Document Version: 5.0
 - Last Updated: 2026-01-13
-- Note: 병렬 구현 시스템 도입 (lead-architect + implementer 1~3), /feature 슬래시 명령어 추가
+- Note: 병렬 구현 시스템 도입 (lead-architect + implementer 1~3), /eee_feature 슬래시 명령어 추가

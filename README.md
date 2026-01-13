@@ -175,9 +175,9 @@ Claude Code 재시작 후 실행:
 
 **방법 1: 슬래시 명령어 (권장)**
 ```bash
-/feature Inventory
-/feature Combat "데미지 계산, 크리티컬, 버프/디버프"
-/feature Quest "퀘스트 수락, 진행, 완료, 보상"
+/eee_feature Inventory
+/eee_feature Combat "데미지 계산, 크리티컬, 버프/디버프"
+/eee_feature Quest "퀘스트 수락, 진행, 완료, 보상"
 ```
 
 **방법 2: 자연어 요청**
@@ -202,7 +202,7 @@ Claude Code 재시작 후 실행:
 
 | 명령어 | 설명 |
 |--------|------|
-| `/feature <시스템명>` | **새 시스템 생성 (병렬 구현 파이프라인)** |
+| `/eee_feature <시스템명>` | **새 시스템 생성 (병렬 구현 파이프라인)** |
 | `/eee_tdd` | TDD 워크플로우 적용 |
 | `/eee_review` | 코드 리뷰 (SOLID + 안티패턴 + Beta 안전성) |
 
@@ -315,7 +315,7 @@ public class Pet : IStatModifier
 - `.claude/pipelines/new-system.md` - 새 시스템 생성 파이프라인 (병렬 구현)
 - `.claude/pipelines/qa-pipeline.md` - 전체 QA 검증 파이프라인
 - `.claude/scripts/create-structure.sh` - 폴더 구조 생성 스크립트
-- `.claude/skills/feature.md` - `/feature` 슬래시 명령어 스킬
+- `.claude/skills/eee_feature.md` - `/eee_feature` 슬래시 명령어 스킬
 
 ## 함께 사용하면 좋은 도구
 
