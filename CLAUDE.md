@@ -302,6 +302,14 @@ Located in `.claude/agents/`:
 | `momus` | 계획 검증, 문서화 품질, 90% 신뢰도 기준 | opus |
 | `oracle` | 아키텍처 상담, 트레이드오프 분석 (읽기 전용) | opus |
 
+#### 리서치/분석 에이전트
+
+| 에이전트 | 역할 | 모델 |
+|---------|-----|-----|
+| `librarian` | 외부 문서, OSS 코드, API 레퍼런스 검색 | sonnet |
+| `atlas` | 코드베이스 매핑, 구조 분석, 의존성 그래프 | sonnet |
+| `multimodal-looker` | 스크린샷, UI 목업, 다이어그램 분석 | opus |
+
 #### QA 에이전트
 
 | 에이전트 | 역할 | 모델 |
@@ -420,6 +428,7 @@ Located in `.claude/skills/`:
 | `/eee_ultrawork` | Ultrawork 모드 활성화 (최대 성능) |
 | `/eee_ralph` | Ralph Loop 활성화 (DONE까지 자동 반복) |
 | `/eee_notes` | 작업 노트 관리 (확인/생성/검색) |
+| `/eee_history` | 세션 히스토리 검색 및 관리 |
 
 **예시:**
 ```
@@ -682,4 +691,4 @@ Is that correct? (y/n)
     - 카테고리 시스템 (quick, standard, deep, ultrabrain, visual, tdd)
     - Junior 에이전트 (경량 작업 전용)
     - 조건부 규칙 시스템 (.claude/rules/)
-    - 신규 명령어: /eee_start-work, /eee_init-deep, /eee_ultrawork, /eee_ralph, /eee_notes
+    - 신규 명령어: /eee_start-work, /eee_init-deep, /eee_ultrawork, /eee_ralph, /eee_notes, /eee_history

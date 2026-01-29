@@ -1,1 +1,119 @@
-{}
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/context-window-monitor.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-recovery.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/keyword-detector.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rules-injector.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/category-skill-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/agent-usage-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/task-resume-info.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/auto-slash-command.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/subagent-question-blocker.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/comment-checker.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/edit-error-recovery.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/delegate-task-retry.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/background-notification.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/junior-notepad.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/tool-output-truncator.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/notify.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/empty-task-response-detector.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/context-limit-recovery.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

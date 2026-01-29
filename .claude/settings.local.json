@@ -13,7 +13,11 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(__NEW_LINE_dd2f87bd131571de__ echo \"\")",
       "Bash(gh auth:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(chmod:*)"
     ]
   },
   "enabledPlugins": {
