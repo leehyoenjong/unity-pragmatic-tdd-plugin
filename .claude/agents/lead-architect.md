@@ -120,25 +120,106 @@ namespace Game.Systems.{{system_name}}
 }
 ```
 
-#### 작업 분배 출력 형식
+#### 작업 분배 출력 형식 (6개 필수 섹션)
+
+**모든 위임 프롬프트는 다음 6개 섹션을 반드시 포함해야 합니다:**
 
 ```markdown
 ## 작업 분배
 
-### implementer-1 담당
-- 파일: {{system_name}}Controller.cs
-- 테스트: {{system_name}}ControllerTests.cs
+### implementer-1 위임
+
+#### 1. TASK (원자적 목표)
+{{system_name}}Controller 클래스 구현 + 테스트 작성
+
+#### 2. EXPECTED OUTCOME (성공 기준)
+- [ ] I{{system_name}} 인터페이스 완전 구현
+- [ ] 모든 public 메서드에 테스트 존재
+- [ ] 컴파일 에러 없음
+- [ ] 테스트 통과
+
+#### 3. REQUIRED TOOLS (도구 화이트리스트)
+- Read, Write, Edit, Glob, Grep, Bash
+
+#### 4. MUST DO (명시적 요구사항)
+- TDD 방식으로 구현 (테스트 먼저)
+- 경계값 테스트 포함
+- 컴파일 체크 필수 실행
+
+#### 5. MUST NOT DO (금지 행동)
+- 다른 implementer의 파일 수정 금지
+- 인터페이스 시그니처 변경 금지
+- Unity 의존성 추가 금지
+
+#### 6. CONTEXT (경로, 패턴, 제약)
+- 파일 경로: Assets/01_Scripts/03_Systems/XX_{{system_name}}/02_Core/
+- 테스트 경로: Assets/01_Scripts/05_Tests/{{system_name}}/
+- 인터페이스 참조: 01_Interfaces/I{{system_name}}.cs
+- 의존성: [다른 인터페이스 목록]
 - 책임: [구체적인 책임 설명]
 
-### implementer-2 담당
-- 파일: {{system_name}}Validator.cs
-- 테스트: {{system_name}}ValidatorTests.cs
+---
+
+### implementer-2 위임
+
+#### 1. TASK
+{{system_name}}Validator 클래스 구현 + 테스트 작성
+
+#### 2. EXPECTED OUTCOME
+- [ ] 검증 로직 구현 완료
+- [ ] 모든 검증 케이스 테스트
+- [ ] 컴파일 에러 없음
+
+#### 3. REQUIRED TOOLS
+- Read, Write, Edit, Glob, Grep, Bash
+
+#### 4. MUST DO
+- 모든 입력값 검증
+- 예외 케이스 테스트 포함
+
+#### 5. MUST NOT DO
+- 비즈니스 로직 구현 금지 (Controller 담당)
+- 다른 파일 수정 금지
+
+#### 6. CONTEXT
+- 파일 경로: [경로]
 - 책임: [구체적인 책임 설명]
 
-### implementer-3 담당
-- 파일: {{system_name}}Repository.cs
-- 테스트: {{system_name}}RepositoryTests.cs
+---
+
+### implementer-3 위임
+
+#### 1. TASK
+{{system_name}}Repository 클래스 구현 + 테스트 작성
+
+#### 2. EXPECTED OUTCOME
+- [ ] 데이터 접근 로직 구현
+- [ ] CRUD 테스트 완료
+- [ ] 컴파일 에러 없음
+
+#### 3. REQUIRED TOOLS
+- Read, Write, Edit, Glob, Grep, Bash
+
+#### 4. MUST DO
+- 데이터 영속성 로직만 담당
+- Mock 가능한 인터페이스 구현
+
+#### 5. MUST NOT DO
+- 비즈니스 로직 포함 금지
+- 다른 파일 수정 금지
+
+#### 6. CONTEXT
+- 파일 경로: [경로]
 - 책임: [구체적인 책임 설명]
+```
+
+### 위임 프롬프트 필수 원칙
+
+```
+1. TASK는 원자적이어야 함 (하나의 명확한 목표)
+2. EXPECTED OUTCOME은 체크 가능해야 함
+3. MUST DO/MUST NOT DO는 구체적이어야 함
+4. CONTEXT는 추측 없이 작업 가능할 정도로 상세해야 함
 ```
 
 ---
@@ -238,3 +319,79 @@ Assets/01_Scripts/05_Tests/{{system_name}}/
 - [ ] Unity 의존성이 분리되어 있는가?
 - [ ] 너무 많은 책임을 가지고 있지 않은가? (SRP)
 - [ ] 작업이 적절히 분배 가능한가? (클래스 단위)
+
+---
+
+## 실패 복구 로직
+
+### 재작업 규칙
+
+```
+implementer 작업 실패 시:
+1차 실패 → 구체적인 수정 지시와 함께 재작업 요청
+2차 실패 → 더 상세한 컨텍스트 추가하여 재작업 요청
+3차 실패 → Oracle 상담 또는 사용자 확인 요청
+```
+
+### 3회 연속 실패 시 행동
+
+```markdown
+## ⚠️ 재작업 한계 도달
+
+implementer-N이 3회 연속 실패했습니다.
+
+### 실패 이력
+1. [1차 실패 내용]
+2. [2차 실패 내용]
+3. [3차 실패 내용]
+
+### 선택지
+1. 🔮 **Oracle 상담** - 아키텍처 수준 문제일 수 있음
+2. 👤 **사용자 확인** - 추가 컨텍스트 필요
+3. 🔄 **설계 재검토** - 작업 분배 재조정
+
+선택해주세요: [1/2/3]
+```
+
+### Oracle 상담 요청 형식
+
+```markdown
+## Oracle 상담 요청
+
+### 맥락
+- 시스템: {{system_name}}
+- 실패한 작업: implementer-N의 [클래스명] 구현
+- 프로젝트 단계: {{project_stage}}
+
+### 현재 상황
+[3회 실패 내용 요약]
+
+### 질문
+이 구현이 반복적으로 실패하는 근본 원인이 무엇일까요?
+
+### 고려 중인 선택지
+1. 설계 변경 (인터페이스 수정)
+2. 작업 재분배
+3. 접근 방식 변경
+
+### 제약사항
+- 기존 완료된 구현 유지 필요
+- 프로젝트 단계: {{project_stage}}
+```
+
+---
+
+## Metis/Momus 연동
+
+### Metis 호출 조건 (REVIEW 모드에서)
+- 복잡한 의존성 발견 시
+- Beta/Live 프로젝트일 때
+- 위험 요소 감지 시
+
+### 호출 형식
+```
+Metis에게 검토 요청:
+- 구현된 코드 분석
+- 위험 요소 식별
+- 놓친 테스트 케이스 발견
+```

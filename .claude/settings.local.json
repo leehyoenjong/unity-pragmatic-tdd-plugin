@@ -8,7 +8,12 @@
       "Bash(echo:*)",
       "Bash(git config:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(__NEW_LINE_dd2f87bd131571de__ echo \"\")",
+      "Bash(gh auth:*)",
+      "Bash(git remote set-url:*)"
     ]
   },
   "enabledPlugins": {

@@ -1,0 +1,8 @@
+# Rules Directory
+
+Conditional rules that are injected based on context.
+
+## File naming
+- `on_{trigger}.md` - Triggered rules
+- `always_{name}.md` - Always active rules
+- `{directory}_rules.md` - Directory-specific rules
