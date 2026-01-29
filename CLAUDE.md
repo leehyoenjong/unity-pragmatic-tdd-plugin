@@ -417,7 +417,7 @@ Located in `.claude/pipelines/`:
 ## Available Skills and Docs
 
 ### User-Invocable Skills (슬래시 명령어)
-Located in `.claude/skills/`:
+Located in `commands/`:
 
 | 명령어 | 설명 |
 |-------|------|
