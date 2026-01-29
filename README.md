@@ -100,7 +100,6 @@ lead ────┼─ implementer-2 (클래스B + 테스트) ─┼──→ l
 | 스크립트 | 용도 |
 |---------|-----|
 | `create-structure.sh` | 폴더/빈 파일 생성 (XX_ 규칙 적용) |
-| `enable.sh` | 프로젝트별 플러그인 활성화 |
 
 ### 알림 (Hooks)
 
@@ -126,63 +125,28 @@ test 프로젝트 작업이 완료되었습니다
 
 ## 설치
 
-### Step 1: 마켓플레이스 등록 & 설치
-
-Claude Code에서 실행:
+### Step 1: 마켓플레이스 등록 (최초 1회)
 
 ```bash
 /plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
+```
+
+### Step 2: 플러그인 설치
+
+사용할 프로젝트에서 실행:
+
+```bash
 /plugin install unity-pragmatic-tdd
 ```
 
-> **참고**: 설치 시 **"Install for you, in this repo only (local scope)"** 선택 권장
-
-### Step 2: 프로젝트별 활성화
-
-플러그인을 사용할 각 프로젝트에서 활성화가 필요합니다.
-
-**방법 1: 스크립트 사용 (권장)**
-
-```bash
-# 프로젝트 루트에서 실행
-bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh
-
-# 확인 없이 강제 실행
-bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh -f
-```
-
-**방법 2: alias 설정 (편리)**
-
-`~/.zshrc` 또는 `~/.bashrc`에 추가:
-
-```bash
-alias enable-tdd='bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh'
-```
-
-이후 프로젝트에서:
-
-```bash
-cd /path/to/unity/project
-enable-tdd -f
-```
-
-**방법 3: 수동 생성**
-
-프로젝트 루트에 `.claude/settings.local.json` 파일 생성:
-
-```json
-{
-  "enabledPlugins": {
-    "unity-pragmatic-tdd@leehyoenjong-plugins": true
-  }
-}
-```
-
-> **참고**: 활성화 후 Claude Code 재시작 필요
+설치 범위 선택:
+- **User scope** - 모든 프로젝트에서 사용
+- **Project scope** - 팀원과 공유
+- **Local scope** - 이 프로젝트에서만
 
 ### Step 3: 초기 설정
 
-Claude Code 재시작 후 실행:
+Claude Code 재시작 후:
 
 ```bash
 /eee_init
@@ -191,7 +155,6 @@ Claude Code 재시작 후 실행:
 초기 설정에서 수행하는 작업:
 - PROJECT_CONTEXT.md 생성 (프로젝트 단계 설정)
 - 추가 도구 설치 안내 (Unity-MCP, claude-mem)
-- .clauderules 파일 생성
 
 ## 사용법
 
@@ -485,16 +448,13 @@ curl -fsSL -o AI-Game-Dev-Installer.unitypackage https://github.com/IvanMurzak/U
 ## 빠른 시작 요약
 
 ```bash
-# 1. 플러그인 설치 (최초 1회)
+# 1. 마켓플레이스 등록 (최초 1회)
 /plugin marketplace add leehyoenjong/unity-pragmatic-tdd-plugin
-/plugin install unity-pragmatic-tdd  # local scope 선택
 
-# 2. 프로젝트 활성화 (프로젝트마다)
-bash ~/.claude/plugins/cache/leehyoenjong-plugins/unity-pragmatic-tdd/1.0.0/enable.sh -f
+# 2. 플러그인 설치 (프로젝트에서)
+/plugin install unity-pragmatic-tdd
 
-# 3. Claude Code 재시작
-
-# 4. 초기 설정
+# 3. Claude Code 재시작 후 초기 설정
 /eee_init
 ```
 
