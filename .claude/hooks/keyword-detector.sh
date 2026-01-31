@@ -64,6 +64,36 @@ if [[ "$PROMPT_LOWER" == *"tdd"* ]] || \
     echo "[keyword-detector] TDD mode keyword detected"
 fi
 
+# Think mode detection (ultrathink, think deeply)
+if [[ "$PROMPT_LOWER" == *"ultrathink"* ]] || \
+   [[ "$PROMPT_LOWER" == *"울트라씽크"* ]] || \
+   [[ "$PROMPT_LOWER" == *"think deeply"* ]] || \
+   [[ "$PROMPT_LOWER" == *"깊이 생각"* ]] || \
+   [[ "$PROMPT_LOWER" == *"심층 분석"* ]] || \
+   [[ "$PROMPT_LOWER" == *"deep thinking"* ]]; then
+    DETECTED_MODES="$DETECTED_MODES think"
+    echo "[keyword-detector] Think mode activated - Extended reasoning enabled"
+    echo "[keyword-detector] Use maximum analytical depth for this request"
+fi
+
+# Search/Find mode detection
+if [[ "$PROMPT_LOWER" == *"search"* ]] || \
+   [[ "$PROMPT_LOWER" == *"find"* ]] || \
+   [[ "$PROMPT_LOWER" == *"찾아"* ]] || \
+   [[ "$PROMPT_LOWER" == *"검색"* ]]; then
+    DETECTED_MODES="$DETECTED_MODES search"
+    echo "[keyword-detector] Search mode - Use parallel exploration"
+fi
+
+# Analyze/Investigate mode detection
+if [[ "$PROMPT_LOWER" == *"analyze"* ]] || \
+   [[ "$PROMPT_LOWER" == *"investigate"* ]] || \
+   [[ "$PROMPT_LOWER" == *"분석"* ]] || \
+   [[ "$PROMPT_LOWER" == *"조사"* ]]; then
+    DETECTED_MODES="$DETECTED_MODES analyze"
+    echo "[keyword-detector] Analyze mode - Deep investigation enabled"
+fi
+
 # Save detected modes
 if [ -n "$DETECTED_MODES" ]; then
     echo "$DETECTED_MODES" > "$NOTEPADS_DIR/active-modes.txt"

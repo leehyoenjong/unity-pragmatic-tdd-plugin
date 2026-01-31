@@ -4,21 +4,36 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@anthropic/mcp-context7"],
-      "env": {}
+      "env": {},
+      "description": "공식 문서 조회 - 라이브러리/프레임워크 문서 검색"
     },
     "exa": {
       "command": "npx",
       "args": ["-y", "@anthropic/mcp-exa"],
       "env": {
         "EXA_API_KEY": "${EXA_API_KEY}"
-      }
+      },
+      "description": "웹 검색 - Exa AI 기반 실시간 웹 검색"
+    },
+    "grep_app": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-grep-app"],
+      "env": {},
+      "description": "GitHub 코드 검색 - 공개 저장소에서 구현 예시 검색"
     },
     "github": {
       "command": "npx",
       "args": ["-y", "@anthropic/mcp-github"],
       "env": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}"
-      }
+      },
+      "description": "GitHub API - 이슈, PR, 저장소 관리"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"],
+      "env": {},
+      "description": "브라우저 자동화 - 웹 테스트, 스크린샷, 스크래핑"
     }
   }
 }

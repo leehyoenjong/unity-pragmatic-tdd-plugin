@@ -48,9 +48,31 @@
             "command": "bash .claude/hooks/subagent-question-blocker.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/empty-message-sanitizer.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/thinking-block-validator.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/directory-agents-injector.sh"
+          }
+        ]
+      },
       {
         "matcher": "Edit|Write",
         "hooks": [
@@ -111,6 +133,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/context-limit-recovery.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/background-compaction.sh"
           }
         ]
       }
