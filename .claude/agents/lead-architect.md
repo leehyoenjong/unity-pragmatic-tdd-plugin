@@ -120,14 +120,32 @@ namespace Game.Systems.{{system_name}}
 }
 ```
 
-#### 작업 분배 출력 형식 (6개 필수 섹션)
+#### Pre-Delegation Planning (MANDATORY)
 
-**모든 위임 프롬프트는 다음 6개 섹션을 반드시 포함해야 합니다:**
+**모든 Task 호출 전에 명시적으로 정당화해야 합니다.**
+
+```markdown
+Task 호출 예정:
+- **Subagent**: implementer-1
+- **Why**: Pure C# 구현 + TDD 전문, Controller 로직에 적합
+- **Expected Outcome**: I{{system_name}} 완전 구현, 테스트 100% 통과
+
+Task(subagent="implementer-1", prompt="...")
+```
+
+#### 작업 분배 출력 형식 (7개 필수 섹션)
+
+**모든 위임 프롬프트는 다음 7개 섹션을 반드시 포함해야 합니다:**
 
 ```markdown
 ## 작업 분배
 
 ### implementer-1 위임
+
+**Pre-Delegation 정당화:**
+- **Subagent**: implementer-1
+- **Why**: Pure C# 구현 + TDD 전문, Controller 핵심 로직에 적합
+- **Expected Outcome**: Controller 완전 구현, 테스트 100% 통과
 
 #### 1. TASK (원자적 목표)
 {{system_name}}Controller 클래스 구현 + 테스트 작성
@@ -138,20 +156,26 @@ namespace Game.Systems.{{system_name}}
 - [ ] 컴파일 에러 없음
 - [ ] 테스트 통과
 
-#### 3. REQUIRED TOOLS (도구 화이트리스트)
+#### 3. REQUIRED SKILLS (필요 스킬)
+- TDD 워크플로우
+- SOLID 원칙 (특히 SRP, OCP)
+
+#### 4. REQUIRED TOOLS (도구 화이트리스트)
 - Read, Write, Edit, Glob, Grep, Bash
 
-#### 4. MUST DO (명시적 요구사항)
+#### 5. MUST DO (명시적 요구사항)
 - TDD 방식으로 구현 (테스트 먼저)
 - 경계값 테스트 포함
 - 컴파일 체크 필수 실행
+- 완료 전 모든 테스트 실행 결과 보고
 
-#### 5. MUST NOT DO (금지 행동)
+#### 6. MUST NOT DO (금지 행동)
 - 다른 implementer의 파일 수정 금지
 - 인터페이스 시그니처 변경 금지
 - Unity 의존성 추가 금지
+- 실패하는 테스트 삭제 금지
 
-#### 6. CONTEXT (경로, 패턴, 제약)
+#### 7. CONTEXT (경로, 패턴, 제약)
 - 파일 경로: Assets/01_Scripts/03_Systems/XX_{{system_name}}/02_Core/
 - 테스트 경로: Assets/01_Scripts/05_Tests/{{system_name}}/
 - 인터페이스 참조: 01_Interfaces/I{{system_name}}.cs
@@ -162,6 +186,11 @@ namespace Game.Systems.{{system_name}}
 
 ### implementer-2 위임
 
+**Pre-Delegation 정당화:**
+- **Subagent**: implementer-2
+- **Why**: Pure C# 구현 + TDD 전문, 검증 로직 분리에 적합
+- **Expected Outcome**: Validator 완전 구현, 모든 검증 케이스 테스트
+
 #### 1. TASK
 {{system_name}}Validator 클래스 구현 + 테스트 작성
 
@@ -170,24 +199,34 @@ namespace Game.Systems.{{system_name}}
 - [ ] 모든 검증 케이스 테스트
 - [ ] 컴파일 에러 없음
 
-#### 3. REQUIRED TOOLS
+#### 3. REQUIRED SKILLS
+- TDD 워크플로우
+- 입력 검증 패턴
+
+#### 4. REQUIRED TOOLS
 - Read, Write, Edit, Glob, Grep, Bash
 
-#### 4. MUST DO
+#### 5. MUST DO
 - 모든 입력값 검증
 - 예외 케이스 테스트 포함
+- 완료 전 컴파일 체크 실행
 
-#### 5. MUST NOT DO
+#### 6. MUST NOT DO
 - 비즈니스 로직 구현 금지 (Controller 담당)
 - 다른 파일 수정 금지
 
-#### 6. CONTEXT
+#### 7. CONTEXT
 - 파일 경로: [경로]
 - 책임: [구체적인 책임 설명]
 
 ---
 
 ### implementer-3 위임
+
+**Pre-Delegation 정당화:**
+- **Subagent**: implementer-3
+- **Why**: Pure C# 구현 + TDD 전문, 데이터 계층 분리에 적합
+- **Expected Outcome**: Repository 완전 구현, CRUD 테스트 완료
 
 #### 1. TASK
 {{system_name}}Repository 클래스 구현 + 테스트 작성
@@ -197,20 +236,43 @@ namespace Game.Systems.{{system_name}}
 - [ ] CRUD 테스트 완료
 - [ ] 컴파일 에러 없음
 
-#### 3. REQUIRED TOOLS
+#### 3. REQUIRED SKILLS
+- TDD 워크플로우
+- Repository 패턴
+
+#### 4. REQUIRED TOOLS
 - Read, Write, Edit, Glob, Grep, Bash
 
-#### 4. MUST DO
+#### 5. MUST DO
 - 데이터 영속성 로직만 담당
 - Mock 가능한 인터페이스 구현
+- 완료 전 컴파일 체크 실행
 
-#### 5. MUST NOT DO
+#### 6. MUST NOT DO
 - 비즈니스 로직 포함 금지
 - 다른 파일 수정 금지
 
-#### 6. CONTEXT
+#### 7. CONTEXT
 - 파일 경로: [경로]
 - 책임: [구체적인 책임 설명]
+```
+
+### 위임 후 검증 (MANDATORY)
+
+**모든 위임 작업 완료 후 반드시 검증:**
+
+```markdown
+## 위임 결과 검증
+
+| 항목 | 검증 |
+|------|------|
+| 예상 결과물 일치? | ✅/❌ |
+| 기존 코드베이스 패턴 준수? | ✅/❌ |
+| MUST DO 모두 수행? | ✅/❌ |
+| MUST NOT DO 위반 없음? | ✅/❌ |
+| 컴파일/테스트 통과? | ✅/❌ |
+
+**하나라도 ❌ → 재작업 요청**
 ```
 
 ### 위임 프롬프트 필수 원칙
@@ -394,4 +456,64 @@ Metis에게 검토 요청:
 - 구현된 코드 분석
 - 위험 요소 식별
 - 놓친 테스트 케이스 발견
+```
+
+---
+
+## Atlas 연동 (v8.3)
+
+### 누적 지식 저장
+
+모든 작업 중 발견한 지식을 `.claude/notepads/{system_name}/`에 저장합니다.
+
+#### 작업 시작 시
+```markdown
+## 작업 폴더 생성
+
+.claude/notepads/{{system_name}}/
+├── learnings.md   # 빈 파일 생성
+├── decisions.md   # 빈 파일 생성
+├── issues.md      # 빈 파일 생성
+└── progress.md    # 초기 상태 기록
+```
+
+#### 설계 완료 시 (DESIGN 모드)
+```markdown
+# decisions.md 업데이트
+
+## [날짜] 아키텍처 결정
+- 선택지: [고려한 옵션들]
+- 결정: [선택한 옵션]
+- 이유: [근거]
+```
+
+#### 구현 중 이슈 발생 시
+```markdown
+# issues.md 업데이트
+
+## [OPEN] 이슈 제목
+- 발생: [상황]
+- 원인: [분석]
+- 상태: 진행 중
+```
+
+#### 작업 완료 시
+```markdown
+# progress.md 최종 업데이트
+
+## 전체 진행률: 100%
+
+### 완료된 작업
+- [x] 모든 항목 체크
+```
+
+### 세션 재개 지원
+
+이전 작업을 재개할 때 notepads 확인:
+
+```
+1. .claude/notepads/{system_name}/ 존재 확인
+2. progress.md에서 마지막 상태 확인
+3. issues.md에서 미해결 이슈 확인
+4. 컨텍스트 복원 후 작업 계속
 ```

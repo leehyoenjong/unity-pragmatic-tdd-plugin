@@ -264,6 +264,145 @@ Unity 프로젝트 작업 시 Claude와 사용자 간의 역할 분담:
 
 ---
 
+## Behavior Instructions (Sisyphus Style)
+
+### Phase 0 - Intent Gate (EVERY message) - 필수!
+
+모든 요청을 먼저 분류하고 **즉시 행동**합니다. 이 단계는 스킵할 수 없습니다.
+
+#### BLOCKING: 에이전트/스킬 먼저 체크
+
+요청 분석 전에 매칭 확인:
+- 외부 라이브러리/문서 언급 → `librarian` 백그라운드 발사
+- 2+ 모듈 관련 → `explore` 백그라운드 발사
+- 아키텍처 결정/트레이드오프 → `oracle` 상담 준비
+
+#### 의도 분류 후 즉시 행동
+
+| 유형 | 신호 | 즉시 행동 |
+|------|------|----------|
+| **Trivial** | 단일 파일, 명확한 위치 | 직접 도구만 (에이전트 금지) |
+| **Explicit** | 구체적 파일/라인, 명확한 명령 | 즉시 실행 |
+| **Exploratory** | "어떻게 동작?", "찾아봐" | explore 1-3개 병렬 + 도구 병렬 |
+| **Open-ended** | "개선해줘", "리팩토링" | 먼저 코드베이스 평가 |
+| **Ambiguous** | 범위 불명확, 여러 해석 | 명확화 질문 **하나만** |
+
+#### 분류 출력 형식 (간결하게)
+
+```
+📋 의도: [유형] | 행동: [즉시 행동]
+```
+
+---
+
+### 병렬 실행 (DEFAULT behavior)
+
+**explore/librarian = Grep처럼 사용. 항상 background, 항상 병렬.**
+
+```typescript
+// CORRECT: 항상 백그라운드, 항상 병렬
+Task(subagent="explore", run_in_background=true, prompt="인증 구현 찾기...")
+Task(subagent="explore", run_in_background=true, prompt="에러 처리 패턴 찾기...")
+Task(subagent="librarian", run_in_background=true, prompt="UniTask 공식 문서...")
+// 즉시 작업 계속. 필요할 때 결과 수집.
+
+// WRONG: 순차 또는 블로킹
+result = Task(...)  // explore/librarian을 동기로 절대 기다리지 않음
+```
+
+**검색 중단 조건:**
+- 진행할 충분한 컨텍스트 확보
+- 같은 정보가 여러 소스에서 반복
+- 2회 검색 후 새 유용한 데이터 없음
+
+**과도한 탐색 금지. 시간이 소중합니다.**
+
+---
+
+### Pre-Delegation Planning (MANDATORY)
+
+**모든 Task 호출 전에 명시적으로 정당화해야 합니다.**
+
+#### 필수 선언 형식
+
+```
+Task 호출 예정:
+- **Subagent**: [선택한 에이전트]
+- **Why**: [에이전트 description이 task에 맞는 이유]
+- **Expected Outcome**: [구체적 성공 기준]
+
+Task(subagent="...", prompt="...")
+```
+
+#### 위임 프롬프트 필수 7섹션
+
+모든 위임 프롬프트는 다음 7개 섹션을 포함해야 합니다:
+
+```markdown
+1. TASK: 원자적, 구체적 목표 (위임당 하나의 행동)
+2. EXPECTED OUTCOME: 성공 기준이 있는 구체적 결과물
+3. REQUIRED SKILLS: 호출할 스킬 (해당시)
+4. REQUIRED TOOLS: 명시적 도구 화이트리스트 (도구 남용 방지)
+5. MUST DO: 완전한 요구사항 - 암묵적인 것 없이
+6. MUST NOT DO: 금지 행동 - 일탈 행동 예상하고 차단
+7. CONTEXT: 파일 경로, 기존 패턴, 제약사항
+```
+
+**WRONG (rejection 대상):**
+```
+Task(subagent="...", prompt="...")  // 정당화 없음
+```
+
+---
+
+### Evidence Requirements (완료 필수 조건)
+
+| 행동 | 필수 증거 |
+|------|----------|
+| 파일 편집 | 컴파일 체크 통과 |
+| 테스트 작성 | 테스트 실행 결과 |
+| 시스템 구현 | 모든 TODO 완료 표시 |
+| 위임 작업 | 에이전트 결과 수신 및 검증 |
+| 빌드 명령 | Exit code 0 |
+
+**NO EVIDENCE = NOT COMPLETE.**
+
+---
+
+### 실패 복구 (자동)
+
+#### 수정 실패 시:
+1. 증상이 아닌 근본 원인 수정
+2. 모든 수정 시도 후 재검증
+3. 샷건 디버깅 금지 (무작위 변경 희망)
+
+#### 3회 연속 실패 시:
+1. **STOP** - 추가 편집 즉시 중단
+2. **REVERT** - 마지막 동작 상태로 복원 (git checkout / 편집 취소)
+3. **DOCUMENT** - 시도한 것과 실패한 것 문서화
+4. **CONSULT** - Oracle에 전체 실패 컨텍스트와 함께 상담
+5. Oracle 해결 불가 → 사용자에게 질문
+
+**절대 금지:**
+- 망가진 상태로 코드 남기기
+- "되겠지" 하며 계속하기
+- "통과"시키려고 실패하는 테스트 삭제
+
+---
+
+### Anti-Patterns (BLOCKING violations)
+
+| 카테고리 | 금지 |
+|---------|------|
+| **타입 안전성** | `as any`, `@ts-ignore`, `@ts-expect-error` |
+| **에러 처리** | 빈 catch 블록 `catch(e) {}` |
+| **테스팅** | 실패하는 테스트 삭제해서 "통과" |
+| **검색** | 단일 라인 오타나 명백한 문법 에러에 에이전트 발사 |
+| **위임** | 정당화 없이 에이전트 사용 |
+| **디버깅** | 샷건 디버깅, 무작위 변경 |
+
+---
+
 ## Special Instructions for Claude Code
 
 1. **Always check PROJECT_CONTEXT.md first** before starting any work
@@ -307,7 +446,7 @@ Located in `.claude/agents/`:
 | 에이전트 | 역할 | 모델 |
 |---------|-----|-----|
 | `librarian` | 외부 문서, OSS 코드, API 레퍼런스 검색 | sonnet |
-| `atlas` | 코드베이스 매핑, 구조 분석, 의존성 그래프 | sonnet |
+| `atlas` | 코드베이스 매핑 + 오케스트레이션, 진행 추적 (v8.3) | sonnet |
 | `multimodal-looker` | 스크린샷, UI 목업, 다이어그램 분석 | opus |
 
 #### QA 에이전트
@@ -471,6 +610,11 @@ Oh My OpenCode의 `.sisyphus/notes/` 시스템을 기반으로 한 영구 노트
 ├── notes/      # 영구 저장 노트 (세션 간 유지)
 ├── drafts/     # 작업 중인 문서 (계획, 설계)
 ├── notepads/   # 임시 메모 (에이전트 간 통신)
+│   └── {plan-name}/  # 작업별 누적 지식 (v8.3)
+│       ├── learnings.md   # 발견한 패턴, 해결책
+│       ├── decisions.md   # 내린 결정과 이유
+│       ├── issues.md      # 발생한 문제와 해결
+│       └── progress.md    # 진행 상황 추적
 └── rules/      # 조건부 규칙 파일
 ```
 
@@ -481,7 +625,33 @@ Oh My OpenCode의 `.sisyphus/notes/` 시스템을 기반으로 한 영구 노트
 | `notes/` | 중요 결정, 세션 요약 | `2026-01-29_inventory.md` |
 | `drafts/` | 계획 초안, 검토 대기 | `plan_inventory.md` |
 | `notepads/` | 빠른 메모, 임시 계산 | `impl-1_scratch.md` |
+| `notepads/{plan}/` | 작업별 누적 지식 | `inventory/learnings.md` |
 | `rules/` | 조건부 규칙 | `on_beta.md` |
+
+### 누적 지식 시스템 (v8.3)
+
+작업 중 발견한 지식을 체계적으로 저장합니다:
+
+```markdown
+# .claude/notepads/{plan-name}/
+
+## learnings.md - 발견한 패턴, 해결책
+- [2026-01-31] UniTask와 코루틴 혼용 시 주의점 발견
+- [2026-01-31] ScriptableObject 직렬화 패턴 적용
+
+## decisions.md - 내린 결정과 이유
+- [2026-01-31] Repository 패턴 채택 → 테스트 용이성 + 데이터 접근 분리
+- [2026-01-31] IModifier 인터페이스 → OCP 준수
+
+## issues.md - 발생한 문제와 해결
+- [2026-01-31] 순환 참조 발생 → DI 컨테이너로 해결
+- [2026-01-31] 컴파일 에러 → namespace 정리
+
+## progress.md - 진행 상황 추적
+- [x] 인터페이스 설계 (impl-1)
+- [x] Controller 구현 (impl-2)
+- [ ] Tests 작성 (impl-3) - 진행 중
+```
 
 ### 자동 생성 트리거
 
@@ -489,6 +659,7 @@ Oh My OpenCode의 `.sisyphus/notes/` 시스템을 기반으로 한 영구 노트
 - 설계 완료 시 → `notes/design_{system}.md`
 - 3회 실패 발생 시 → `notes/failure_{system}_{date}.md`
 - 세션 종료 시 → `notes/session_{timestamp}.md`
+- 작업 시작 시 → `notepads/{plan-name}/` 폴더 생성 (v8.3)
 
 ---
 
@@ -673,9 +844,9 @@ Is that correct? (y/n)
 ---
 
 ## Version
-- Document Version: 8.0
-- Last Updated: 2026-01-29
-- Note: Oh My OpenCode 기능 완전 이식
+- Document Version: 8.3
+- Last Updated: 2026-01-31
+- Note: Oh My OpenCode 기능 완전 이식 + 누적 지식 시스템 추가
   - v7.0 기능:
     - 의도 분류 (Intent Gate) 시스템
     - 능동적 근거 기반 질문
@@ -683,7 +854,7 @@ Is that correct? (y/n)
     - Metis (계획 검토), Momus (계획 검증), Oracle (아키텍처 상담) 에이전트
     - 6섹션 위임 프롬프트 구조
     - 3회 실패 시 Oracle 상담 로직
-  - v8.0 신규 기능:
+  - v8.0 기능:
     - 작업 노트 시스템 (.claude/notes/, drafts/, notepads/)
     - TODO Continuation Enforcer (미완료 작업 자동 계속)
     - Ultrawork 모드 (최대 성능, 최소 확인)
@@ -692,3 +863,30 @@ Is that correct? (y/n)
     - Junior 에이전트 (경량 작업 전용)
     - 조건부 규칙 시스템 (.claude/rules/)
     - 신규 명령어: /eee_start-work, /eee_init-deep, /eee_ultrawork, /eee_ralph, /eee_notes, /eee_history
+  - v8.1 기능 (Sisyphus Style 강화):
+    - Intent Gate 즉시 행동 연결 (분류 → 병렬 탐색 자동 발사)
+    - 병렬 실행 강제 규칙 (explore/librarian 항상 background)
+    - Pre-Delegation 정당화 필수 (Why + Expected Outcome)
+    - 7섹션 위임 프롬프트 구조 (REQUIRED SKILLS 추가)
+    - Evidence Requirements (완료 필수 조건 명확화)
+    - 실패 복구 자동화 (3회 실패 → Oracle 상담)
+    - Anti-Patterns 명시 (BLOCKING violations)
+  - v8.2 기능 (Prometheus/Metis/Momus 강화):
+    - Planner: 의도별 맞춤 인터뷰 전략 (Refactoring/Build/Mid-sized/Architecture/Research)
+    - Planner: 테스트 인프라 평가 필수 (TDD/사후테스트/수동검증 선택)
+    - Planner: 표준화된 작업 계획 구조 (TL;DR, Context, Objectives, TODOs)
+    - Planner: 단일 계획 원칙 (50+ TODO도 OK, 분할 금지)
+    - Planner: ZERO USER INTERVENTION 수용 기준 (자동화 가능한 것만)
+    - Metis: AI 슬롭 패턴 탐지 (과도한 추상화, 범위 확대, 과다 검증)
+    - Metis: MUST/MUST NOT 지시사항 출력 형식
+    - Momus: "Good Enough" 원칙 (승인 편향, 완벽함 추구 금지)
+    - Momus: OKAY/REJECT 명확화 (치명적 차단만 REJECT)
+    - Momus: 최대 3이슈 제한 (가장 치명적인 것 우선)
+  - v8.3 신규 기능 (누적 지식 + 오케스트레이션):
+    - 누적 지식 시스템: `.claude/notepads/{plan-name}/` 구조
+      - learnings.md (발견한 패턴, 해결책)
+      - decisions.md (내린 결정과 이유)
+      - issues.md (발생한 문제와 해결)
+      - progress.md (진행 상황 추적)
+    - Atlas 오케스트레이션 기능 추가 (작업 분배, 진행 추적, 검증)
+    - 세션 재개 지원 (notepads에서 이전 상태 복원)

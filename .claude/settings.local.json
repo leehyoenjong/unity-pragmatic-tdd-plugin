@@ -17,7 +17,11 @@
       "Bash(gh repo view:*)",
       "Bash(gh api:*)",
       "WebFetch(domain:api.github.com)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "mcp__smithery-ai-github__get_repository",
+      "mcp__smithery-ai-github__get_file_contents",
+      "mcp__smithery-ai-github__search_code",
+      "Bash(git revert:*)"
     ]
   },
   "enabledPlugins": {
